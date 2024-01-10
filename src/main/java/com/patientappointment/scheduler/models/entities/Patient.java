@@ -40,5 +40,6 @@ public class Patient {
     private Set<Doctor> doctors = new HashSet<>();
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy("id")
     private Set<Appointment> appointments = new HashSet<>();
 }
