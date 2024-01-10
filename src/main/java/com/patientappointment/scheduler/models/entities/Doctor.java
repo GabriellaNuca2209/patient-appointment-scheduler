@@ -33,11 +33,13 @@ public class Doctor {
     private DoctorLocation location;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy("id")
     private Set<DoctorSchedule> schedules = new HashSet<>();
 
     @ManyToMany(mappedBy = "doctors")
     private Set<Patient> patient = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OrderBy("id")
     private Set<Appointment> appointments = new HashSet<>();
 }
