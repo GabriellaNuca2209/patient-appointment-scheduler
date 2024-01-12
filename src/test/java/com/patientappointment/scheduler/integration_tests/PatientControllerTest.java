@@ -17,9 +17,12 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,8 +84,8 @@ class PatientControllerTest {
         secondPatientDTO.setEmail("jane@email.com");
 
         mockMvc.perform(post("/api/patients")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(patientDTO)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patientDTO)));
 
         MvcResult result = mockMvc.perform(post("/api/patients")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -94,5 +97,45 @@ class PatientControllerTest {
         log.info(resultAsString);
 
         assertTrue(resultAsString.contains("Patient with email " + secondPatientDTO.getEmail() + " already exists"));
+    }
+
+    @Test
+    void test_GetAllPatients_ShouldPass() throws Exception {
+        PatientDTO patientDTO = new PatientDTO();
+        patientDTO.setId(1L);
+        patientDTO.setFirstName("Jane");
+        patientDTO.setLastName("Doe");
+        patientDTO.setDob(LocalDate.of(2000, 9, 22));
+        patientDTO.setAge((int) ChronoUnit.YEARS.between(patientDTO.getDob(), LocalDate.now()));
+        patientDTO.setEmail("jane@email.com");
+
+        PatientDTO secondPatientDTO = new PatientDTO();
+        secondPatientDTO.setId(2L);
+        secondPatientDTO.setFirstName("John");
+        secondPatientDTO.setLastName("Doe");
+        secondPatientDTO.setDob(LocalDate.of(1967, 10, 15));
+        secondPatientDTO.setAge((int) ChronoUnit.YEARS.between(secondPatientDTO.getDob(), LocalDate.now()));
+        secondPatientDTO.setEmail("john@email.com");
+
+        List<PatientDTO> patientDTOList = new ArrayList<>(List.of(patientDTO, secondPatientDTO));
+
+        mockMvc.perform(post("/api/patients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(patientDTO)));
+
+        mockMvc.perform(post("/api/patients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(secondPatientDTO)));
+
+        MvcResult result = mockMvc.perform(get("/api/patients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(patientDTOList)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String resultAsString = result.getResponse().getContentAsString();
+        List<PatientDTO> patientDTOListConverted = objectMapper.readerForListOf(PatientDTO.class).readValue(resultAsString);
+
+        assertEquals(patientDTOList, patientDTOListConverted);
     }
 }
