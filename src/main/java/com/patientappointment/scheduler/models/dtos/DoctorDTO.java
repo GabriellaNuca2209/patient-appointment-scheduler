@@ -32,8 +32,4 @@ public class DoctorDTO {
     private DoctorSpecialization specialization;
 
     private DoctorLocation location;
-
-    private Set<Patient> patients = new HashSet<>();
-
-    private Set<Appointment> appointments = new HashSet<>();
 }

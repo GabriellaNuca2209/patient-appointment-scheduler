@@ -6,6 +6,8 @@ import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
 import com.patientappointment.scheduler.models.entities.Doctor;
 import com.patientappointment.scheduler.repositories.DoctorRepository;
 import com.patientappointment.scheduler.services.schedule.ScheduleService;
+import com.patientappointment.scheduler.utils.enums.DoctorLocation;
+import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -51,5 +53,10 @@ public class DoctorServiceImpl implements DoctorService {
         doctorScheduleDTO.setDoctor(doctor);
 
         return scheduleService.createSchedule(doctorScheduleDTO);
+    }
+
+    @Override
+    public List<DoctorDTO> getFilteredDoctors(DoctorSpecialization specialization, DoctorLocation location) {
+        return doctorRepository.findFilteredDoctors(specialization, location).stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).toList();
     }
 }

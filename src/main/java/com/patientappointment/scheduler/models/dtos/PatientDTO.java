@@ -32,8 +32,4 @@ public class PatientDTO {
 
     @Email
     private String email;
-
-    private Set<Doctor> doctors = new HashSet<>();
-
-    private Set<Appointment> appointments = new HashSet<>();
 }
