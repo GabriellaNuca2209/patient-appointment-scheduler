@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class DoctorServiceImpl implements DoctorService {
@@ -36,6 +38,11 @@ public class DoctorServiceImpl implements DoctorService {
         log.info("Doctor " + doctorDTO.getFirstName() + " " + doctorDTO.getLastName() + " was saved in database");
 
         return modelMapper.map(savedDoctor, DoctorDTO.class);
+    }
+
+    @Override
+    public List<DoctorDTO> getAllDoctors() {
+        return doctorRepository.findAll().stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).toList();
     }
 
     @Override
