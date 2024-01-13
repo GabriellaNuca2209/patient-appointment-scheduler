@@ -1,7 +1,7 @@
 package com.patientappointment.scheduler.controllers;
 
 import com.patientappointment.scheduler.models.dtos.PatientDTO;
-import com.patientappointment.scheduler.services.PatientService;
+import com.patientappointment.scheduler.services.patient.PatientService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

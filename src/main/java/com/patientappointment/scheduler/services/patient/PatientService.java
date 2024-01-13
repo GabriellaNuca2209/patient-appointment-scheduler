@@ -1,4 +1,4 @@
-package com.patientappointment.scheduler.services;
+package com.patientappointment.scheduler.services.patient;
 
 import com.patientappointment.scheduler.models.dtos.PatientDTO;
 

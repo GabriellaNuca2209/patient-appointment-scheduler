@@ -1,9 +1,11 @@
 package com.patientappointment.scheduler.exceptions;
 
+import com.patientappointment.scheduler.exceptions.doctor.DoctorAlreadyExistsException;
 import com.patientappointment.scheduler.exceptions.patient.PatientAlreadyExistsException;
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,6 +26,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        String[] error = e.getMessage().split(":");
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", error[2].trim() + ":" + error[3]);
+        return new  ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(PatientAlreadyExistsException.class)
     public ResponseEntity<Object> handlePatientAlreadyExistsException(PatientAlreadyExistsException e) {
         return getResponse(e, HttpStatus.CONFLICT);
@@ -32,6 +42,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PatientNotFoundException.class)
     public ResponseEntity<Object> handlePatientNotFoundException(PatientNotFoundException e) {
         return getResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DoctorAlreadyExistsException.class)
+    public ResponseEntity<Object> handleDoctorAlreadyExistsException(DoctorAlreadyExistsException e) {
+        return getResponse(e, HttpStatus.CONFLICT);
     }
 
     private ResponseEntity<Object> getResponse(RuntimeException e, HttpStatus httpStatus) {

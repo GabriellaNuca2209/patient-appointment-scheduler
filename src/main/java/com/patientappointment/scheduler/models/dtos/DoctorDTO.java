@@ -32,7 +32,7 @@ public class DoctorDTO {
 
     private DoctorLocation location;
 
-    private Set<Patient> patient = new HashSet<>();
+    private Set<Patient> patients = new HashSet<>();
 
     private Set<Appointment> appointments = new HashSet<>();
 }
