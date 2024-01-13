@@ -1,6 +1,7 @@
 package com.patientappointment.scheduler.exceptions;
 
 import com.patientappointment.scheduler.exceptions.doctor.DoctorAlreadyExistsException;
+import com.patientappointment.scheduler.exceptions.doctor.DoctorNotFoundException;
 import com.patientappointment.scheduler.exceptions.patient.PatientAlreadyExistsException;
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DoctorAlreadyExistsException.class)
     public ResponseEntity<Object> handleDoctorAlreadyExistsException(DoctorAlreadyExistsException e) {
         return getResponse(e, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DoctorNotFoundException.class)
+    public ResponseEntity<Object> handleDoctorNotFoundException(DoctorNotFoundException e) {
+        return getResponse(e, HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<Object> getResponse(RuntimeException e, HttpStatus httpStatus) {
