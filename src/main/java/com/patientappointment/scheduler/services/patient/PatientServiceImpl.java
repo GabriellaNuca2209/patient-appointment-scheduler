@@ -2,6 +2,7 @@ package com.patientappointment.scheduler.services.patient;
 
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
 import com.patientappointment.scheduler.models.dtos.DoctorDTO;
+import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
 import com.patientappointment.scheduler.models.dtos.PatientDTO;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.PatientRepository;
@@ -78,6 +79,11 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public List<DoctorDTO> getFilteredDoctors(DoctorSpecialization specialization, DoctorLocation location) {
         return doctorService.getFilteredDoctors(specialization, location);
+    }
+
+    @Override
+    public List<DoctorScheduleDTO> getDoctorSchedule(Long doctorId) {
+        return doctorService.getDoctorSchedule(doctorId);
     }
 
     private int calculateAge(LocalDate dob) {

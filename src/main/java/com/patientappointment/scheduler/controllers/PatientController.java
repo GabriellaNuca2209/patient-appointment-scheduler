@@ -1,6 +1,7 @@
 package com.patientappointment.scheduler.controllers;
 
 import com.patientappointment.scheduler.models.dtos.DoctorDTO;
+import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
 import com.patientappointment.scheduler.models.dtos.PatientDTO;
 import com.patientappointment.scheduler.services.patient.PatientService;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
@@ -52,5 +53,10 @@ public class PatientController {
     public ResponseEntity<List<DoctorDTO>> getFilteredDoctors(@RequestParam(value = "specialization", required = false) DoctorSpecialization specialization,
                                                               @RequestParam(value = "location", required = false) DoctorLocation location) {
         return ResponseEntity.ok(patientService.getFilteredDoctors(specialization, location));
+    }
+
+    @GetMapping("/doctors/{doctorId}/schedules")
+    public ResponseEntity<List<DoctorScheduleDTO>> getDoctorSchedule(@PathVariable Long doctorId) {
+        return ResponseEntity.ok(patientService.getDoctorSchedule(doctorId));
     }
 }
