@@ -1,7 +1,10 @@
 package com.patientappointment.scheduler.controllers;
 
+import com.patientappointment.scheduler.models.dtos.DoctorDTO;
 import com.patientappointment.scheduler.models.dtos.PatientDTO;
 import com.patientappointment.scheduler.services.patient.PatientService;
+import com.patientappointment.scheduler.utils.enums.DoctorLocation;
+import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -40,8 +43,14 @@ public class PatientController {
         return ResponseEntity.ok(patientService.updatePatient(id, patientDTO));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deletePatient(@PathVariable Long id) {
         patientService.deletePatient(id);
+    }
+
+    @GetMapping("/filtered/doctors")
+    public ResponseEntity<List<DoctorDTO>> getFilteredDoctors(@RequestParam(value = "specialization", required = false) DoctorSpecialization specialization,
+                                                              @RequestParam(value = "location", required = false) DoctorLocation location) {
+        return ResponseEntity.ok(patientService.getFilteredDoctors(specialization, location));
     }
 }

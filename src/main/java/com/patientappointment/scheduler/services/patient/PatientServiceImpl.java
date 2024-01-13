@@ -1,9 +1,13 @@
 package com.patientappointment.scheduler.services.patient;
 
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
+import com.patientappointment.scheduler.models.dtos.DoctorDTO;
 import com.patientappointment.scheduler.models.dtos.PatientDTO;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.PatientRepository;
+import com.patientappointment.scheduler.services.doctor.DoctorService;
+import com.patientappointment.scheduler.utils.enums.DoctorLocation;
+import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,11 +22,13 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientServiceValidation patientServiceValidation;
+    private final DoctorService doctorService;
     private final ModelMapper modelMapper;
 
-    public PatientServiceImpl(PatientRepository patientRepository, PatientServiceValidation patientServiceValidation, ModelMapper modelMapper) {
+    public PatientServiceImpl(PatientRepository patientRepository, PatientServiceValidation patientServiceValidation, DoctorService doctorService, ModelMapper modelMapper) {
         this.patientRepository = patientRepository;
         this.patientServiceValidation = patientServiceValidation;
+        this.doctorService = doctorService;
         this.modelMapper = modelMapper;
     }
 
@@ -67,6 +73,11 @@ public class PatientServiceImpl implements PatientService {
     public void deletePatient(Long id) {
         Patient patient = patientRepository.findById(id).orElseThrow(() -> new PatientNotFoundException("Patient with id " + id + " not found"));
         patientRepository.delete(patient);
+    }
+
+    @Override
+    public List<DoctorDTO> getFilteredDoctors(DoctorSpecialization specialization, DoctorLocation location) {
+        return doctorService.getFilteredDoctors(specialization, location);
     }
 
     private int calculateAge(LocalDate dob) {

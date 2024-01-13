@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 public enum DoctorLocation {
 
-    @JsonProperty("Clinic A")
+    @JsonProperty("Clinic_A")
     CLINIC_A("Clinic A"),
-    @JsonProperty("Clinic B")
+    @JsonProperty("Clinic_B")
     CLINIC_B("Clinic B"),
-    @JsonProperty("Clinic C")
+    @JsonProperty("Clinic_C")
     CLINIC_C("Clinic C");
 
     private final String locationLabel;
