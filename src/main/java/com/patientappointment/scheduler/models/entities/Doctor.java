@@ -37,7 +37,7 @@ public class Doctor {
     private Set<DoctorSchedule> schedules = new HashSet<>();
 
     @ManyToMany(mappedBy = "doctors")
-    private Set<Patient> patient = new HashSet<>();
+    private Set<Patient> patients = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderBy("id")

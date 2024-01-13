@@ -1,14 +1,12 @@
-package com.patientappointment.scheduler.services;
+package com.patientappointment.scheduler.services.patient;
 
 import com.patientappointment.scheduler.exceptions.patient.PatientAlreadyExistsException;
 import com.patientappointment.scheduler.models.dtos.PatientDTO;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.PatientRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 public class PatientServiceValidationImpl implements PatientServiceValidation {
 
     private final PatientRepository patientRepository;
