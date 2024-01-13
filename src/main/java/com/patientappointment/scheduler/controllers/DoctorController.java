@@ -1,14 +1,14 @@
 package com.patientappointment.scheduler.controllers;
 
 import com.patientappointment.scheduler.models.dtos.DoctorDTO;
+import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
 import com.patientappointment.scheduler.services.doctor.DoctorService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/doctors")
@@ -24,5 +24,15 @@ public class DoctorController {
     @PostMapping
     public ResponseEntity<DoctorDTO> createDoctor(@Valid @RequestBody DoctorDTO doctorDTO) {
         return ResponseEntity.ok(doctorService.createDoctor(doctorDTO));
+    }
+
+    @PostMapping("/{doctorId}/schedules")
+    public ResponseEntity<DoctorScheduleDTO> createSchedule(@Valid @RequestBody DoctorScheduleDTO doctorScheduleDTO, @PathVariable Long doctorId) {
+        return ResponseEntity.ok(doctorService.createSchedule(doctorScheduleDTO, doctorId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<DoctorDTO>> getAllDoctors() {
+        return ResponseEntity.ok(doctorService.getAllDoctors());
     }
 }

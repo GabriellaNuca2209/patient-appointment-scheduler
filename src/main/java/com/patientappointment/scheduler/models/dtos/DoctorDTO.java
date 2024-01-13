@@ -1,6 +1,7 @@
 package com.patientappointment.scheduler.models.dtos;
 
 import com.patientappointment.scheduler.models.entities.Appointment;
+import com.patientappointment.scheduler.models.entities.DoctorSchedule;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
