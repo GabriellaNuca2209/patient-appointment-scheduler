@@ -5,6 +5,7 @@ import com.patientappointment.scheduler.exceptions.patient.PatientAlreadyExistsE
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,6 +24,14 @@ public class GlobalExceptionHandler {
                 .forEach(error -> result.put(error.getField(), error.getDefaultMessage()));
 
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        String[] error = e.getMessage().split(":");
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", error[2].trim() + ":" + error[3]);
+        return new  ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PatientAlreadyExistsException.class)
