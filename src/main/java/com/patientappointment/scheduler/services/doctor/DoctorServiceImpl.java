@@ -57,6 +57,17 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<DoctorDTO> getFilteredDoctors(DoctorSpecialization specialization, DoctorLocation location) {
+        if (specialization == null && location == null) {
+            return getAllDoctors();
+        }
+
         return doctorRepository.findFilteredDoctors(specialization, location).stream().map(doctor -> modelMapper.map(doctor, DoctorDTO.class)).toList();
+    }
+
+    @Override
+    public List<DoctorScheduleDTO> getDoctorSchedule(Long doctorId) {
+        doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
+
+        return scheduleService.getDoctorSchedule(doctorId);
     }
 }
