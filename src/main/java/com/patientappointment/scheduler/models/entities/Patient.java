@@ -26,7 +26,7 @@ public class Patient {
     private LocalDate dob;
 
     @Column(name = "age")
-    private Integer age;
+    private Integer age; // get rid of age
 
     @Column(name = "email", unique = true)
     private String email;

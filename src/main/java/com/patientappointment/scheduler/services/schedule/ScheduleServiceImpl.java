@@ -57,9 +57,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         slots.add(startShift);
 
         while (!slots.contains(endShift)) {
-            slots.add(slots.get(slots.size() - 1).plusMinutes(20));
+            slots.add(slots.get(slots.size() - 1).plusMinutes(20)); // use constant for minutes
         }
-
+        // exclude end shift
         return slots;
     }
 }
