@@ -3,7 +3,7 @@ package com.patientappointment.scheduler.models.dtos;
 import com.patientappointment.scheduler.models.entities.Doctor;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.utils.enums.AppointmentStatus;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -14,10 +14,10 @@ public class AppointmentDTO {
 
     private Long id;
 
-    @NotBlank
+    @NotNull
     private LocalDate appointmentDate;
 
-    @NotBlank
+    @NotNull
     private LocalTime appointmentTime;
 
     private AppointmentStatus status;
