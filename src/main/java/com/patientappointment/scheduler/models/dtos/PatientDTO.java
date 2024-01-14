@@ -2,10 +2,7 @@ package com.patientappointment.scheduler.models.dtos;
 
 import com.patientappointment.scheduler.models.entities.Appointment;
 import com.patientappointment.scheduler.models.entities.Doctor;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -19,16 +16,16 @@ public class PatientDTO {
 
     @NotBlank
     @Size(min = 3, max = 75, message = "must be between 2 and 75 characters")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Invalid characters found")
     private String firstName;
 
     @NotBlank
     @Size(min = 3, max = 75, message = "must be between 2 and 75 characters")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Invalid characters found")
     private String lastName;
 
     @NotNull
     private LocalDate dob;
-
-    private Integer age;
 
     @Email
     private String email;

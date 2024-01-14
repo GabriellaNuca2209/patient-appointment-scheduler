@@ -41,7 +41,6 @@ public class PatientServiceImpl implements PatientService {
     public PatientDTO createPatient(PatientDTO patientDTO) {
         patientServiceValidation.validatePatientAlreadyExists(patientDTO);
 
-        patientDTO.setAge(calculateAge(patientDTO.getDob()));
         Patient savedPatient = patientRepository.save(modelMapper.map(patientDTO, Patient.class));
         log.info("Patient " + savedPatient.getFirstName() + " " + savedPatient.getLastName() + " was saved in database.");
 
@@ -96,9 +95,5 @@ public class PatientServiceImpl implements PatientService {
         DoctorDTO doctorDTO = doctorService.getDoctor(doctorId);
 
         return appointmentService.createAppointment(appointmentDTO, patientDTO, doctorDTO);
-    }
-
-    private int calculateAge(LocalDate dob) {
-        return (int) ChronoUnit.YEARS.between(dob, LocalDate.now());
     }
 }
