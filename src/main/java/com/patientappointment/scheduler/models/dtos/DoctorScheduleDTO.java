@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class DoctorScheduleDTO {
@@ -16,6 +18,8 @@ public class DoctorScheduleDTO {
     private LocalTime startShift;
 
     private LocalTime endShift;
+
+    private List<LocalTime> availableSlots = new ArrayList<>();
 
     private Doctor doctor;
 }

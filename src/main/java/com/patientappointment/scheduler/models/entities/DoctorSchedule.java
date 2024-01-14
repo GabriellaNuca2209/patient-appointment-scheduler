@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -23,6 +25,8 @@ public class DoctorSchedule {
 
     @Column(name = "end_shift")
     private LocalTime endShift;
+
+    private List<LocalTime> availableSlots = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "doctor_id")
