@@ -48,6 +48,13 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    public DoctorDTO getDoctor(Long id) {
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + id + " not found"));
+
+        return modelMapper.map(doctor, DoctorDTO.class);
+    }
+
+    @Override
     public DoctorScheduleDTO createSchedule(DoctorScheduleDTO doctorScheduleDTO, Long doctorId) {
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
         doctorScheduleDTO.setDoctor(doctor);

@@ -1,5 +1,6 @@
 package com.patientappointment.scheduler.controllers;
 
+import com.patientappointment.scheduler.models.dtos.AppointmentDTO;
 import com.patientappointment.scheduler.models.dtos.DoctorDTO;
 import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
 import com.patientappointment.scheduler.models.dtos.PatientDTO;
@@ -58,5 +59,13 @@ public class PatientController {
     @GetMapping("/doctors/{doctorId}/schedules")
     public ResponseEntity<List<DoctorScheduleDTO>> getDoctorSchedule(@PathVariable Long doctorId) {
         return ResponseEntity.ok(patientService.getDoctorSchedule(doctorId));
+    }
+
+    // Pure testing here
+    @PostMapping("/{patientId}/doctors/{doctorId}/appointments")
+    public ResponseEntity<AppointmentDTO> createAppointment(@Valid @RequestBody AppointmentDTO appointmentDTO,
+                                                            @PathVariable Long patientId,
+                                                            @PathVariable Long doctorId) {
+        return ResponseEntity.ok(patientService.createAppointment(appointmentDTO, patientId, doctorId));
     }
 }
