@@ -1,5 +1,7 @@
 package com.patientappointment.scheduler.exceptions;
 
+import com.patientappointment.scheduler.exceptions.appointment.DateNotFoundException;
+import com.patientappointment.scheduler.exceptions.appointment.TimeNotFoundException;
 import com.patientappointment.scheduler.exceptions.doctor.DoctorAlreadyExistsException;
 import com.patientappointment.scheduler.exceptions.doctor.DoctorNotFoundException;
 import com.patientappointment.scheduler.exceptions.patient.PatientAlreadyExistsException;
@@ -52,6 +54,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DoctorNotFoundException.class)
     public ResponseEntity<Object> handleDoctorNotFoundException(DoctorNotFoundException e) {
+        return getResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TimeNotFoundException.class)
+    public ResponseEntity<Object> handleTimeNotFoundException(TimeNotFoundException e) {
+        return getResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DateNotFoundException.class)
+    public ResponseEntity<Object> handleDateNotFoundException(DateNotFoundException e) {
         return getResponse(e, HttpStatus.NOT_FOUND);
     }
 

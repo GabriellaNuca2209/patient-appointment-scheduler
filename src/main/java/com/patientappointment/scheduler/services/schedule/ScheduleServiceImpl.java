@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public DoctorScheduleDTO createSchedule(DoctorScheduleDTO doctorScheduleDTO) {
         doctorScheduleDTO.setAvailableSlots(calculateAvailableSlots(doctorScheduleDTO.getStartShift(), doctorScheduleDTO.getEndShift()));
-        doctorScheduleDTO.getAvailableSlots().forEach(System.out::println);
         DoctorSchedule savedSchedule = scheduleRepository.save(modelMapper.map(doctorScheduleDTO, DoctorSchedule.class));
 
         return modelMapper.map(savedSchedule, DoctorScheduleDTO.class);
@@ -37,6 +37,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<DoctorScheduleDTO> getDoctorSchedule(Long doctorId) {
         List<DoctorSchedule> doctorSchedules = scheduleRepository.findByDoctorId(doctorId);
         return doctorSchedules.stream().map(schedule -> modelMapper.map(schedule, DoctorScheduleDTO.class)).toList();
+    }
+
+    @Override
+    public DoctorSchedule getSchedule(LocalDate date, Long id) {
+        return scheduleRepository.findByWorkingDateAndDoctorId(date, id);
+    }
+
+    @Override
+    public void removeSlot(LocalDate date, LocalTime time, Long id) {
+        DoctorSchedule schedule = getSchedule(date, id);
+        schedule.getAvailableSlots().remove(time);
+
+        scheduleRepository.save(schedule);
     }
 
     private List<LocalTime> calculateAvailableSlots(LocalTime startShift, LocalTime endShift) {
