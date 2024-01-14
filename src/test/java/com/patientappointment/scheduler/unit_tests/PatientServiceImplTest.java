@@ -4,7 +4,7 @@ import com.patientappointment.scheduler.models.dtos.PatientDTO;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.PatientRepository;
 import com.patientappointment.scheduler.services.patient.PatientServiceImpl;
-import com.patientappointment.scheduler.services.patient.PatientServiceValidationImpl;
+import com.patientappointment.scheduler.services.patient.PatientServiceValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,7 @@ class PatientServiceImplTest {
     private PatientRepository patientRepository;
 
     @Mock
-    private PatientServiceValidationImpl patientServiceValidation;
+    private PatientServiceValidation patientServiceValidation;
 
     @Mock
     private ModelMapper modelMapper;
