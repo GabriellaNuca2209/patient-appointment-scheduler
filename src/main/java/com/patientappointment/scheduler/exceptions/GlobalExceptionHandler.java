@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleMethodArgumentNotValidException(ConstraintViolationException exception) {
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException exception) {
         Map<String, Object> result = new HashMap<>();
 
         result.put("message", exception.getConstraintViolations().stream()
