@@ -40,6 +40,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDTO createPatient(PatientDTO patientDTO) {
         patientServiceValidation.validatePatientAlreadyExists(patientDTO);
+        patientServiceValidation.validatePatientDob(patientDTO.getDob());
 
         Patient savedPatient = patientRepository.save(modelMapper.map(patientDTO, Patient.class));
         log.info("Patient " + savedPatient.getFirstName() + " " + savedPatient.getLastName() + " was saved in database.");

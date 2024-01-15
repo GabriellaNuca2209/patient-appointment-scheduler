@@ -31,9 +31,9 @@ public class PatientServiceValidationImpl implements PatientServiceValidation {
 
     @Override
     public void validatePatientDob(LocalDate dob) {
+        if (dob.isAfter(LocalDate.now())) throw new DobFutureException("Date: " + dob + " is invalid.");
+
         int age = (int) ChronoUnit.YEARS.between(dob, LocalDate.now());
         if (age < MINIMUM_AGE) throw new UnderageException("Underage patient");
-
-        if (dob.isAfter(LocalDate.now())) throw new DobFutureException("Date: " + dob + " is invalid.");
     }
 }
