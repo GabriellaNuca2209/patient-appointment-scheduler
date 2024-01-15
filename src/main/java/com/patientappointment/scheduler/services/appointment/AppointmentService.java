@@ -12,4 +12,5 @@ public interface AppointmentService {
 
     AppointmentDTO createAppointment(AppointmentDTO appointmentDTO, PatientDTO patientDTO, DoctorDTO doctorDTO);
     List<Appointment> getAppointments(LocalDate date, Long doctorId);
+    List<AppointmentDTO> getPatientAppointments(Long id);
 }

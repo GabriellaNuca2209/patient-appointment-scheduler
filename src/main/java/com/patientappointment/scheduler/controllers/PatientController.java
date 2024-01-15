@@ -71,4 +71,9 @@ public class PatientController {
                                                             @PathVariable Long doctorId) {
         return ResponseEntity.ok(patientService.createAppointment(appointmentDTO, patientId, doctorId));
     }
+
+    @GetMapping("/{id}/appointments")
+    public ResponseEntity<List<AppointmentDTO>> getPatientAppointments(@PathVariable Long id) {
+        return ResponseEntity.ok(patientService.getPatientAppointments(id));
+    }
 }

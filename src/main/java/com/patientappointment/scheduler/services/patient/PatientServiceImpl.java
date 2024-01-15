@@ -108,4 +108,11 @@ public class PatientServiceImpl implements PatientService {
 
         return appointmentService.createAppointment(appointmentDTO, patientDTO, doctorDTO);
     }
+
+    @Override
+    public List<AppointmentDTO> getPatientAppointments(Long id) {
+        patientRepository.findById(id).orElseThrow(() -> new PatientNotFoundException("Patient with id " + id + " not found"));
+
+        return appointmentService.getPatientAppointments(id);
+    }
 }

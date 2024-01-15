@@ -19,4 +19,5 @@ public interface PatientService {
     List<DoctorScheduleDTO> getDoctorSchedules(Long doctorId);
     List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId);
     AppointmentDTO createAppointment(AppointmentDTO appointmentDTO, Long patientId, Long doctorId);
+    List<AppointmentDTO> getPatientAppointments(Long id);
 }
