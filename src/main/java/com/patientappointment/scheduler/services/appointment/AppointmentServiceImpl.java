@@ -43,4 +43,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<Appointment> getAppointments(LocalDate date, Long doctorId) {
         return appointmentRepository.findByAppointmentDateAndDoctorId(date, doctorId);
     }
+
+    @Override
+    public List<AppointmentDTO> getPatientAppointments(Long id) {
+        return appointmentRepository.findByPatientId(id).stream().map(app -> modelMapper.map(app, AppointmentDTO.class)).toList();
+    }
 }
