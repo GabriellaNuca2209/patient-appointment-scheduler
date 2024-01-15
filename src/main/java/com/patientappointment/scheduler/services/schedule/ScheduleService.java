@@ -12,6 +12,5 @@ public interface ScheduleService {
     DoctorScheduleDTO createSchedule(DoctorScheduleDTO doctorScheduleDTO);
     List<DoctorScheduleDTO> getDoctorSchedule(Long doctorId);
     DoctorSchedule getSchedule(LocalDate date, Long id);
-
-    void removeSlot(LocalDate date, LocalTime time, Long id);
+    List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId);
 }

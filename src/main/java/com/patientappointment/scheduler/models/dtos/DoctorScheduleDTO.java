@@ -19,7 +19,5 @@ public class DoctorScheduleDTO {
 
     private LocalTime endShift;
 
-    private List<LocalTime> availableSlots = new ArrayList<>();
-
     private Doctor doctor;
 }

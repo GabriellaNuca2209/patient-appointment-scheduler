@@ -4,7 +4,7 @@ import com.patientappointment.scheduler.exceptions.doctor.DoctorNotFoundExceptio
 import com.patientappointment.scheduler.models.dtos.DoctorDTO;
 import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
 import com.patientappointment.scheduler.models.entities.Doctor;
-import com.patientappointment.scheduler.repositories.DoctorRepository;
+import com.patientappointment.scheduler.repositories.doctor.DoctorRepository;
 import com.patientappointment.scheduler.services.schedule.ScheduleService;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;

@@ -3,7 +3,7 @@ package com.patientappointment.scheduler.services.doctor;
 import com.patientappointment.scheduler.exceptions.doctor.DoctorAlreadyExistsException;
 import com.patientappointment.scheduler.models.dtos.DoctorDTO;
 import com.patientappointment.scheduler.models.entities.Doctor;
-import com.patientappointment.scheduler.repositories.DoctorRepository;
+import com.patientappointment.scheduler.repositories.doctor.DoctorRepository;
 import org.springframework.stereotype.Component;
 
 @Component

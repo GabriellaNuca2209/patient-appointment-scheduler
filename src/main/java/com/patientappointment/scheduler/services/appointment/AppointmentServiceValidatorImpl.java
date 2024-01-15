@@ -20,18 +20,5 @@ public class AppointmentServiceValidatorImpl implements AppointmentServiceValida
         this.scheduleService = scheduleService;
     }
 
-    @Override
-    public void validateAppointmentDate(LocalDate date, DoctorDTO doctorDTO) {
-        DoctorSchedule schedule = scheduleService.getSchedule(date, doctorDTO.getId());
 
-        if (schedule == null) throw new DateNotFoundException("Date " + date + " not valid.");
-    }
-
-    @Override
-    public void validateAppointmentTime(LocalDate date, LocalTime time, DoctorDTO doctorDTO) {
-        DoctorSchedule schedule = scheduleService.getSchedule(date, doctorDTO.getId());
-        List<LocalTime> availableSlots = schedule.getAvailableSlots();
-
-        if (!availableSlots.contains(time)) throw new TimeNotFoundException("Time " + time + " not valid");
-    }
 }

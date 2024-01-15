@@ -7,6 +7,4 @@ import java.time.LocalTime;
 
 public interface AppointmentServiceValidator {
 
-    void validateAppointmentDate(LocalDate date, DoctorDTO doctorDTO);
-    void validateAppointmentTime(LocalDate date, LocalTime time, DoctorDTO doctorDTO);
 }

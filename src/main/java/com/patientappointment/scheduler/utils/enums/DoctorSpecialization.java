@@ -17,9 +17,7 @@ public enum DoctorSpecialization {
     @JsonProperty("Neurology")
     NEUROLOGY("Neurology"),
     @JsonProperty("Gynecology")
-    GYNECOLOGY("Gynecology"),
-    @JsonProperty("Pediatrics")
-    PEDIATRICS("Pediatrics");
+    GYNECOLOGY("Gynecology");
 
     private final String specializationLabel;
 
