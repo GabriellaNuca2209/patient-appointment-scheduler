@@ -9,6 +9,7 @@ import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.PatientRepository;
 import com.patientappointment.scheduler.services.appointment.AppointmentService;
 import com.patientappointment.scheduler.services.doctor.DoctorService;
+import com.patientappointment.scheduler.services.schedule.ScheduleService;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +17,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -26,13 +28,15 @@ public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
     private final PatientServiceValidation patientServiceValidation;
     private final DoctorService doctorService;
+    private final ScheduleService scheduleService;
     private final AppointmentService appointmentService;
     private final ModelMapper modelMapper;
 
-    public PatientServiceImpl(PatientRepository patientRepository, PatientServiceValidation patientServiceValidation, DoctorService doctorService, AppointmentService appointmentService, ModelMapper modelMapper) {
+    public PatientServiceImpl(PatientRepository patientRepository, PatientServiceValidation patientServiceValidation, DoctorService doctorService, ScheduleService scheduleService, AppointmentService appointmentService, ModelMapper modelMapper) {
         this.patientRepository = patientRepository;
         this.patientServiceValidation = patientServiceValidation;
         this.doctorService = doctorService;
+        this.scheduleService = scheduleService;
         this.appointmentService = appointmentService;
         this.modelMapper = modelMapper;
     }
@@ -77,6 +81,21 @@ public class PatientServiceImpl implements PatientService {
     public void deletePatient(Long id) {
         Patient patient = patientRepository.findById(id).orElseThrow(() -> new PatientNotFoundException("Patient with id " + id + " not found"));
         patientRepository.delete(patient);
+    }
+
+    @Override
+    public List<DoctorDTO> getFilteredDoctors(DoctorSpecialization specialization, DoctorLocation location) {
+        return doctorService.getFilteredDoctors(specialization, location);
+    }
+
+    @Override
+    public List<DoctorScheduleDTO> getDoctorSchedules(Long doctorId) {
+        return doctorService.getDoctorSchedules(doctorId);
+    }
+
+    @Override
+    public List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId) {
+        return scheduleService.getAvailableSlots(date, doctorId);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.patientappointment.scheduler.exceptions.doctor.DoctorAlreadyExistsExc
 import com.patientappointment.scheduler.exceptions.doctor.DoctorNotFoundException;
 import com.patientappointment.scheduler.exceptions.patient.PatientAlreadyExistsException;
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
+import com.patientappointment.scheduler.exceptions.schedule.ScheduleOutOfBoundsException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -78,6 +79,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DateNotFoundException.class)
     public ResponseEntity<Object> handleDateNotFoundException(DateNotFoundException e) {
         return getResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ScheduleOutOfBoundsException.class)
+    public ResponseEntity<Object> handleScheduleOutOfBoundsException(ScheduleOutOfBoundsException e) {
+        return getResponse(e, HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<Object> getResponse(RuntimeException e, HttpStatus httpStatus) {

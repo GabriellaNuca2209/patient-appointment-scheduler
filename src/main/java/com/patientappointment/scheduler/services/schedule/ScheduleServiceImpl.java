@@ -48,7 +48,6 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId) {
         DoctorSchedule schedule = scheduleRepository.findByWorkingDateAndDoctorId(date, doctorId);
         List<Appointment> appointments = appointmentService.getAppointments(date, doctorId);
-
         List<LocalTime> totalSlots = calculateTotalSlots(schedule.getStartShift(), schedule.getEndShift());
 
         return calculateAvailableSlots(totalSlots, appointments);
