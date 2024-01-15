@@ -4,8 +4,10 @@ import com.patientappointment.scheduler.exceptions.appointment.DateNotFoundExcep
 import com.patientappointment.scheduler.exceptions.appointment.TimeNotFoundException;
 import com.patientappointment.scheduler.exceptions.doctor.DoctorAlreadyExistsException;
 import com.patientappointment.scheduler.exceptions.doctor.DoctorNotFoundException;
+import com.patientappointment.scheduler.exceptions.patient.DobFutureException;
 import com.patientappointment.scheduler.exceptions.patient.PatientAlreadyExistsException;
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
+import com.patientappointment.scheduler.exceptions.patient.UnderageException;
 import com.patientappointment.scheduler.exceptions.schedule.ScheduleOutOfBoundsException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -45,9 +47,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        String[] error = e.getMessage().split(":");
         Map<String, Object> result = new HashMap<>();
-        result.put("message", error[2].trim() + ":" + error[3]);
+        result.put("message", "Invalid input");
         return new  ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
@@ -83,6 +84,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ScheduleOutOfBoundsException.class)
     public ResponseEntity<Object> handleScheduleOutOfBoundsException(ScheduleOutOfBoundsException e) {
+        return getResponse(e, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnderageException.class)
+    public ResponseEntity<Object> handleUnderageException(UnderageException e) {
+        return getResponse(e, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(DobFutureException.class)
+    public ResponseEntity<Object> handleDobFutureException(DobFutureException e) {
         return getResponse(e, HttpStatus.BAD_REQUEST);
     }
 

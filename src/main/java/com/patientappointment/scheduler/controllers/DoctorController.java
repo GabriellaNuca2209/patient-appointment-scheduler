@@ -24,6 +24,11 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.createDoctor(doctorDTO));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<DoctorDTO> getDoctor(@PathVariable Long id) {
+        return ResponseEntity.ok(doctorService.getDoctor(id));
+    }
+
     @PostMapping("/{doctorId}/schedules")
     public ResponseEntity<DoctorScheduleDTO> createSchedule(@Valid @RequestBody DoctorScheduleDTO doctorScheduleDTO, @PathVariable Long doctorId) {
         return ResponseEntity.ok(doctorService.createSchedule(doctorScheduleDTO, doctorId));
