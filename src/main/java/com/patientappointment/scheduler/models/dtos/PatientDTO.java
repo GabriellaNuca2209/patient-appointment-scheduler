@@ -1,13 +1,11 @@
 package com.patientappointment.scheduler.models.dtos;
 
-import com.patientappointment.scheduler.models.entities.Appointment;
-import com.patientappointment.scheduler.models.entities.Doctor;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+
+import static com.patientappointment.scheduler.utils.constants.RegexConstants.REGEX_CHAR_PATTERN;
 
 @Data
 public class PatientDTO {
@@ -16,12 +14,12 @@ public class PatientDTO {
 
     @NotBlank
     @Size(min = 3, max = 75, message = "must be between 2 and 75 characters")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "Invalid characters found")
+    @Pattern(regexp = REGEX_CHAR_PATTERN, message = "Invalid characters found")
     private String firstName;
 
     @NotBlank
     @Size(min = 3, max = 75, message = "must be between 2 and 75 characters")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "Invalid characters found")
+    @Pattern(regexp = REGEX_CHAR_PATTERN, message = "Invalid characters found")
     private String lastName;
 
     @NotNull

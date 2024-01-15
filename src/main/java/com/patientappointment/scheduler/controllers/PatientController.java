@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -48,6 +50,22 @@ public class PatientController {
     @DeleteMapping("/{id}")
     public void deletePatient(@PathVariable Long id) {
         patientService.deletePatient(id);
+    }
+
+    @GetMapping("/filtered/doctors")
+    public ResponseEntity<List<DoctorDTO>> getAllAndFilteredDoctors(@RequestParam(value = "specialization", required = false) DoctorSpecialization specialization,
+                                                                    @RequestParam(value = "location", required = false) DoctorLocation location) {
+        return ResponseEntity.ok(patientService.getFilteredDoctors(specialization, location));
+    }
+
+    @GetMapping("/doctors/{doctorId}/schedules")
+    public ResponseEntity<List<DoctorScheduleDTO>> getDoctorSchedules(@PathVariable Long doctorId) {
+        return ResponseEntity.ok(patientService.getDoctorSchedules(doctorId));
+    }
+
+    @GetMapping("/{date}/doctors/{doctorId}/slots")
+    public ResponseEntity<List<LocalTime>> getAvailableSlots(@PathVariable LocalDate date, @PathVariable Long doctorId) {
+        return ResponseEntity.ok(patientService.getAvailableSlots(date, doctorId));
     }
 
     @PostMapping("/{patientId}/doctors/{doctorId}/appointments")
