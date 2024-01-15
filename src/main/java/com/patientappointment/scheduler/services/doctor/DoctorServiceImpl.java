@@ -72,9 +72,9 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<DoctorScheduleDTO> getDoctorSchedule(Long doctorId) {
+    public List<DoctorScheduleDTO> getDoctorSchedules(Long doctorId) {
         doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
 
-        return scheduleService.getDoctorSchedule(doctorId);
+        return scheduleService.getDoctorSchedules(doctorId);
     }
 }

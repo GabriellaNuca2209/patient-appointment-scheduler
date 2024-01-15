@@ -50,18 +50,6 @@ public class PatientController {
         patientService.deletePatient(id);
     }
 
-    @GetMapping("/filtered/doctors")
-    public ResponseEntity<List<DoctorDTO>> getFilteredDoctors(@RequestParam(value = "specialization", required = false) DoctorSpecialization specialization,
-                                                              @RequestParam(value = "location", required = false) DoctorLocation location) {
-        return ResponseEntity.ok(patientService.getFilteredDoctors(specialization, location));
-    }
-
-    @GetMapping("/doctors/{doctorId}/schedules")
-    public ResponseEntity<List<DoctorScheduleDTO>> getDoctorSchedule(@PathVariable Long doctorId) {
-        return ResponseEntity.ok(patientService.getDoctorSchedule(doctorId));
-    }
-
-    // Pure testing here
     @PostMapping("/{patientId}/doctors/{doctorId}/appointments")
     public ResponseEntity<AppointmentDTO> createAppointment(@Valid @RequestBody AppointmentDTO appointmentDTO,
                                                             @PathVariable Long patientId,

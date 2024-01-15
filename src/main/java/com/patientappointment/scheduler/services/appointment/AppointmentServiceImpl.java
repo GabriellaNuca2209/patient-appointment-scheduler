@@ -7,7 +7,6 @@ import com.patientappointment.scheduler.models.entities.Appointment;
 import com.patientappointment.scheduler.models.entities.Doctor;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.AppointmentRepository;
-import com.patientappointment.scheduler.services.schedule.ScheduleService;
 import com.patientappointment.scheduler.utils.enums.AppointmentStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -31,9 +30,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO, PatientDTO patientDTO, DoctorDTO doctorDTO) {
-//        appointmentServiceValidator.validateAppointmentDate(appointmentDTO.getAppointmentDate(), doctorDTO);
-//        appointmentServiceValidator.validateAppointmentTime(appointmentDTO.getAppointmentDate(), appointmentDTO.getAppointmentTime(), doctorDTO);
-
         appointmentDTO.setDoctor(modelMapper.map(doctorDTO, Doctor.class));
         appointmentDTO.setPatient(modelMapper.map(patientDTO, Patient.class));
         appointmentDTO.setStatus(AppointmentStatus.SCHEDULED);

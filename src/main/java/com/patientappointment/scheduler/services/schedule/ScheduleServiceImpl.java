@@ -39,14 +39,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<DoctorScheduleDTO> getDoctorSchedule(Long doctorId) {
+    public List<DoctorScheduleDTO> getDoctorSchedules(Long doctorId) {
         List<DoctorSchedule> doctorSchedules = scheduleRepository.findByDoctorId(doctorId);
         return doctorSchedules.stream().map(schedule -> modelMapper.map(schedule, DoctorScheduleDTO.class)).toList();
-    }
-
-    @Override
-    public DoctorSchedule getSchedule(LocalDate date, Long id) {
-        return scheduleRepository.findByWorkingDateAndDoctorId(date, id);
     }
 
     @Override

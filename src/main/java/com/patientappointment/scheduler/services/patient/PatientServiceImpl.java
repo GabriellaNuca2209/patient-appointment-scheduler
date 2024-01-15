@@ -80,16 +80,6 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<DoctorDTO> getFilteredDoctors(DoctorSpecialization specialization, DoctorLocation location) {
-        return doctorService.getFilteredDoctors(specialization, location);
-    }
-
-    @Override
-    public List<DoctorScheduleDTO> getDoctorSchedule(Long doctorId) {
-        return doctorService.getDoctorSchedule(doctorId);
-    }
-
-    @Override
     public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO, Long patientId, Long doctorId) {
         PatientDTO patientDTO = getPatient(patientId);
         DoctorDTO doctorDTO = doctorService.getDoctor(doctorId);
