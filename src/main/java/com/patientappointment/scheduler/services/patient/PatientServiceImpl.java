@@ -1,10 +1,7 @@
 package com.patientappointment.scheduler.services.patient;
 
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
-import com.patientappointment.scheduler.models.dtos.AppointmentDTO;
-import com.patientappointment.scheduler.models.dtos.DoctorDTO;
-import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
-import com.patientappointment.scheduler.models.dtos.PatientDTO;
+import com.patientappointment.scheduler.models.dtos.*;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.PatientRepository;
 import com.patientappointment.scheduler.services.appointment.AppointmentService;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
@@ -44,6 +40,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDTO createPatient(PatientDTO patientDTO) {
         patientServiceValidation.validatePatientAlreadyExists(patientDTO);
+        patientServiceValidation.validatePatientDob(patientDTO.getDob());
 
         Patient savedPatient = patientRepository.save(modelMapper.map(patientDTO, Patient.class));
         log.info("Patient " + savedPatient.getFirstName() + " " + savedPatient.getLastName() + " was saved in database.");
@@ -64,12 +61,18 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public PatientDTO updatePatient(Long id, PatientDTO patientDTO) {
+    public PatientDTO updatePatient(Long id, PatientUpdateDTO patientUpdateDTO) {
         Patient patient = patientRepository.findById(id).orElseThrow(() -> new PatientNotFoundException("Patient with id " + id + " not found"));
 
-        patient.setFirstName(patientDTO.getFirstName());
-        patient.setLastName(patientDTO.getLastName());
-        patient.setEmail(patientDTO.getEmail());
+        if (patientUpdateDTO.getFirstName() != null) {
+            patient.setFirstName(patientUpdateDTO.getFirstName());
+        }
+        if (patientUpdateDTO.getLastName() != null) {
+            patient.setLastName(patientUpdateDTO.getLastName());
+        }
+        if (patientUpdateDTO.getEmail() != null) {
+            patient.setEmail(patientUpdateDTO.getEmail());
+        }
 
         Patient savedPatient = patientRepository.save(patient);
         log.info("Patient with id " + id + " was updated in db.");

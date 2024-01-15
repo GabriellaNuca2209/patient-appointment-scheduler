@@ -1,9 +1,6 @@
 package com.patientappointment.scheduler.services.patient;
 
-import com.patientappointment.scheduler.models.dtos.AppointmentDTO;
-import com.patientappointment.scheduler.models.dtos.DoctorDTO;
-import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
-import com.patientappointment.scheduler.models.dtos.PatientDTO;
+import com.patientappointment.scheduler.models.dtos.*;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 
@@ -16,7 +13,7 @@ public interface PatientService {
     PatientDTO createPatient(PatientDTO patientDTO);
     List<PatientDTO> getAllPatients();
     PatientDTO getPatient(Long id);
-    PatientDTO updatePatient(Long id, PatientDTO patientDTO);
+    PatientDTO updatePatient(Long id, PatientUpdateDTO patientUpdateDTO);
     void deletePatient(Long id);
     List<DoctorDTO> getFilteredDoctors(DoctorSpecialization specialization, DoctorLocation location);
     List<DoctorScheduleDTO> getDoctorSchedules(Long doctorId);

@@ -1,9 +1,6 @@
 package com.patientappointment.scheduler.controllers;
 
-import com.patientappointment.scheduler.models.dtos.AppointmentDTO;
-import com.patientappointment.scheduler.models.dtos.DoctorDTO;
-import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
-import com.patientappointment.scheduler.models.dtos.PatientDTO;
+import com.patientappointment.scheduler.models.dtos.*;
 import com.patientappointment.scheduler.services.patient.PatientService;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
@@ -43,8 +40,8 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PatientDTO> updatePatient(@PathVariable Long id, @Valid @RequestBody PatientDTO patientDTO) {
-        return ResponseEntity.ok(patientService.updatePatient(id, patientDTO));
+    public ResponseEntity<PatientDTO> updatePatient(@PathVariable Long id, @Valid @RequestBody PatientUpdateDTO patientUpdateDTO) {
+        return ResponseEntity.ok(patientService.updatePatient(id, patientUpdateDTO));
     }
 
     @DeleteMapping("/{id}")
