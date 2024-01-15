@@ -26,8 +26,6 @@ public class DoctorSchedule {
     @Column(name = "end_shift")
     private LocalTime endShift;
 
-    private List<LocalTime> availableSlots = new ArrayList<>();
-
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;

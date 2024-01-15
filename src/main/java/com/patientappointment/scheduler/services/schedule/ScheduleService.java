@@ -10,8 +10,6 @@ import java.util.List;
 public interface ScheduleService {
 
     DoctorScheduleDTO createSchedule(DoctorScheduleDTO doctorScheduleDTO);
-    List<DoctorScheduleDTO> getDoctorSchedule(Long doctorId);
-    DoctorSchedule getSchedule(LocalDate date, Long id);
-
-    void removeSlot(LocalDate date, LocalTime time, Long id);
+    List<DoctorScheduleDTO> getDoctorSchedules(Long doctorId);
+    List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId);
 }

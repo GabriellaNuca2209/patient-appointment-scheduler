@@ -1,4 +1,4 @@
-package com.patientappointment.scheduler.repositories;
+package com.patientappointment.scheduler.repositories.doctor;
 
 import com.patientappointment.scheduler.models.entities.Doctor;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;

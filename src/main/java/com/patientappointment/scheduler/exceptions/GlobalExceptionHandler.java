@@ -6,6 +6,8 @@ import com.patientappointment.scheduler.exceptions.doctor.DoctorAlreadyExistsExc
 import com.patientappointment.scheduler.exceptions.doctor.DoctorNotFoundException;
 import com.patientappointment.scheduler.exceptions.patient.PatientAlreadyExistsException;
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -25,6 +27,17 @@ public class GlobalExceptionHandler {
 
         exception.getBindingResult().getFieldErrors()
                 .forEach(error -> result.put(error.getField(), error.getDefaultMessage()));
+
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException exception) {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("message", exception.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessageTemplate)
+                .findFirst());
 
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
