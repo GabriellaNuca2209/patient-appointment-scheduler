@@ -2,11 +2,13 @@ package com.patientappointment.scheduler.services.patient;
 
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
 import com.patientappointment.scheduler.models.dtos.*;
+import com.patientappointment.scheduler.models.entities.Appointment;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.PatientRepository;
 import com.patientappointment.scheduler.services.appointment.AppointmentService;
 import com.patientappointment.scheduler.services.doctor.DoctorService;
 import com.patientappointment.scheduler.services.schedule.ScheduleService;
+import com.patientappointment.scheduler.utils.enums.AppointmentStatus;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 import lombok.extern.slf4j.Slf4j;
@@ -98,7 +100,9 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId) {
-        return scheduleService.getAvailableSlots(date, doctorId);
+        List<Appointment> appointments = appointmentService.getAppointments(date, doctorId, AppointmentStatus.SCHEDULED);
+
+        return scheduleService.getAvailableSlots(date, doctorId, appointments);
     }
 
     @Override
@@ -114,5 +118,12 @@ public class PatientServiceImpl implements PatientService {
         patientRepository.findById(id).orElseThrow(() -> new PatientNotFoundException("Patient with id " + id + " not found"));
 
         return appointmentService.getPatientAppointments(id);
+    }
+
+    @Override
+    public AppointmentDTO cancelAppointment(Long patientId, Long appointmentId) {
+        patientRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException("Patient with id " + patientId + " not found"));
+
+        return appointmentService.cancelAppointment(appointmentId);
     }
 }

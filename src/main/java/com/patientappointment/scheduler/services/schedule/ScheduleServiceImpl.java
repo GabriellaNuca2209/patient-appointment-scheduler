@@ -5,6 +5,7 @@ import com.patientappointment.scheduler.models.entities.Appointment;
 import com.patientappointment.scheduler.models.entities.DoctorSchedule;
 import com.patientappointment.scheduler.repositories.ScheduleRepository;
 import com.patientappointment.scheduler.services.appointment.AppointmentService;
+import com.patientappointment.scheduler.utils.enums.AppointmentStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,10 @@ import static com.patientappointment.scheduler.utils.constants.ScheduleConstants
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final AppointmentService appointmentService;
-
     private final ModelMapper modelMapper;
 
-    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, AppointmentService appointmentService, ModelMapper modelMapper) {
+    public ScheduleServiceImpl(ScheduleRepository scheduleRepository, ModelMapper modelMapper) {
         this.scheduleRepository = scheduleRepository;
-        this.appointmentService = appointmentService;
         this.modelMapper = modelMapper;
     }
 
@@ -45,9 +43,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId) {
+    public List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId, List<Appointment> appointments) {
         DoctorSchedule schedule = scheduleRepository.findByWorkingDateAndDoctorId(date, doctorId);
-        List<Appointment> appointments = appointmentService.getAppointments(date, doctorId);
         List<LocalTime> totalSlots = calculateTotalSlots(schedule.getStartShift(), schedule.getEndShift());
 
         return calculateAvailableSlots(totalSlots, appointments);

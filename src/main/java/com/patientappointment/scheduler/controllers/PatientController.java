@@ -76,4 +76,9 @@ public class PatientController {
     public ResponseEntity<List<AppointmentDTO>> getPatientAppointments(@PathVariable Long id) {
         return ResponseEntity.ok(patientService.getPatientAppointments(id));
     }
+
+    @PutMapping("/{patientId}/appointments/{appointmentId}")
+    public ResponseEntity<AppointmentDTO> cancelAppointment(@PathVariable Long patientId, @PathVariable Long appointmentId) {
+        return ResponseEntity.ok(patientService.cancelAppointment(patientId, appointmentId));
+    }
 }
