@@ -1,5 +1,6 @@
 package com.patientappointment.scheduler.services.doctor;
 
+import com.patientappointment.scheduler.models.dtos.AppointmentDTO;
 import com.patientappointment.scheduler.models.dtos.DoctorDTO;
 import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
@@ -15,4 +16,6 @@ public interface DoctorService {
     DoctorScheduleDTO createSchedule(DoctorScheduleDTO doctorScheduleDTO, Long doctorId);
     List<DoctorDTO> getFilteredDoctors(DoctorSpecialization specialization, DoctorLocation location);
     List<DoctorScheduleDTO> getDoctorSchedules(Long doctorId);
+    AppointmentDTO openConsultation(Long doctorId, Long appointmentId);
+    AppointmentDTO closeConsultation(Long doctorId, Long appointmentId);
 }

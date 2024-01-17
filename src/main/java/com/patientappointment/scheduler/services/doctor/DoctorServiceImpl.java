@@ -1,10 +1,12 @@
 package com.patientappointment.scheduler.services.doctor;
 
 import com.patientappointment.scheduler.exceptions.doctor.DoctorNotFoundException;
+import com.patientappointment.scheduler.models.dtos.AppointmentDTO;
 import com.patientappointment.scheduler.models.dtos.DoctorDTO;
 import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
 import com.patientappointment.scheduler.models.entities.Doctor;
 import com.patientappointment.scheduler.repositories.doctor.DoctorRepository;
+import com.patientappointment.scheduler.services.appointment.AppointmentService;
 import com.patientappointment.scheduler.services.schedule.ScheduleService;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
@@ -19,17 +21,16 @@ import java.util.List;
 public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepository doctorRepository;
-
     private final DoctorServiceValidation doctorServiceValidation;
-
     private final ScheduleService scheduleService;
-
+    private final AppointmentService appointmentService;
     private final ModelMapper modelMapper;
 
-    public DoctorServiceImpl(DoctorRepository doctorRepository, DoctorServiceValidation doctorServiceValidation, ScheduleService scheduleService, ModelMapper modelMapper) {
+    public DoctorServiceImpl(DoctorRepository doctorRepository, DoctorServiceValidation doctorServiceValidation, ScheduleService scheduleService, AppointmentService appointmentService, ModelMapper modelMapper) {
         this.doctorRepository = doctorRepository;
         this.doctorServiceValidation = doctorServiceValidation;
         this.scheduleService = scheduleService;
+        this.appointmentService = appointmentService;
         this.modelMapper = modelMapper;
     }
 
@@ -78,5 +79,23 @@ public class DoctorServiceImpl implements DoctorService {
         doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
 
         return scheduleService.getDoctorSchedules(doctorId);
+    }
+
+    @Override
+    public AppointmentDTO openConsultation(Long doctorId, Long appointmentId) {
+        doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
+
+        return appointmentService.openConsultation(appointmentId);
+    }
+
+    @Override
+    public AppointmentDTO closeConsultation(Long doctorId, Long appointmentId) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
+        AppointmentDTO appointmentDTO = appointmentService.closeConsultation(appointmentId);
+        doctor.getPatients().add(appointmentDTO.getPatient());
+        doctorRepository.save(doctor);
+        log.info("patient for doctor: " + doctor.getPatients());
+
+        return appointmentDTO;
     }
 }

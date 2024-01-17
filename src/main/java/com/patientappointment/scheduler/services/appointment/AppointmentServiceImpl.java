@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.patientappointment.scheduler.utils.enums.AppointmentStatus.*;
+
 @Slf4j
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -38,7 +40,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentDTO.setDoctor(modelMapper.map(doctorDTO, Doctor.class));
         appointmentDTO.setPatient(modelMapper.map(patientDTO, Patient.class));
-        appointmentDTO.setStatus(AppointmentStatus.SCHEDULED);
+        appointmentDTO.setStatus(SCHEDULED);
 
         Appointment savedAppointment = appointmentRepository.save(modelMapper.map(appointmentDTO, Appointment.class));
 
@@ -59,7 +61,29 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentDTO cancelAppointment(Long appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new AppointmentNotFoundException("Appointment with id " + appointmentId + " not found"));
-        appointment.setStatus(AppointmentStatus.CANCELED);
+        appointment.setStatus(CANCELED);
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+
+        return modelMapper.map(savedAppointment, AppointmentDTO.class);
+    }
+
+    @Override
+    public AppointmentDTO openConsultation(Long appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException("Appointment with id " + appointmentId + " not found"));
+        appointmentServiceValidation.validateAppointmentStatusIsScheduled(appointment.getStatus());
+        appointment.setStatus(ONGOING);
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+
+        return modelMapper.map(savedAppointment, AppointmentDTO.class);
+    }
+
+    @Override
+    public AppointmentDTO closeConsultation(Long appointmentId) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new AppointmentNotFoundException("Appointment with id " + appointmentId + " not found"));
+        appointmentServiceValidation.validateAppointmentStatusIsOngoing(appointment.getStatus());
+        appointment.setStatus(COMPLETED);
         Appointment savedAppointment = appointmentRepository.save(appointment);
 
         return modelMapper.map(savedAppointment, AppointmentDTO.class);

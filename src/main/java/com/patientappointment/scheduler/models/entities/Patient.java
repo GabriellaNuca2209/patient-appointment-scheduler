@@ -1,7 +1,6 @@
 package com.patientappointment.scheduler.models.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -26,17 +25,10 @@ public class Patient {
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dob;
 
-    // get rid of age
-
     @Column(name = "email", unique = true)
     private String email;
 
-    @ManyToMany
-    @JoinTable(
-            name = "patient_doctor",
-            joinColumns = @JoinColumn(name = "patient_id"),
-            inverseJoinColumns = @JoinColumn(name = "doctor_id")
-    )
+    @ManyToMany(mappedBy = "patients")
     private Set<Doctor> doctors = new HashSet<>();
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

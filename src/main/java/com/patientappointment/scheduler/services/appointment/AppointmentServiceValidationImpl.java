@@ -1,12 +1,12 @@
 package com.patientappointment.scheduler.services.appointment;
 
+import com.patientappointment.scheduler.exceptions.appointment.AppointmentStatusMismatchException;
 import com.patientappointment.scheduler.exceptions.appointment.DateNotFoundException;
 import com.patientappointment.scheduler.exceptions.appointment.TimeNotFoundException;
 import com.patientappointment.scheduler.models.entities.Appointment;
 import com.patientappointment.scheduler.models.entities.DoctorSchedule;
 import com.patientappointment.scheduler.repositories.AppointmentRepository;
 import com.patientappointment.scheduler.repositories.ScheduleRepository;
-import com.patientappointment.scheduler.services.patient.PatientService;
 import com.patientappointment.scheduler.services.schedule.ScheduleService;
 import com.patientappointment.scheduler.utils.enums.AppointmentStatus;
 import org.springframework.stereotype.Component;
@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
+import static com.patientappointment.scheduler.utils.enums.AppointmentStatus.ONGOING;
+import static com.patientappointment.scheduler.utils.enums.AppointmentStatus.SCHEDULED;
 
 @Component
 public class AppointmentServiceValidationImpl implements AppointmentServiceValidation {
@@ -37,8 +40,22 @@ public class AppointmentServiceValidationImpl implements AppointmentServiceValid
 
     @Override
     public void validateAppointmentTime(LocalDate date, LocalTime time, Long doctorId) {
-        List<Appointment> appointments = appointmentRepository.findByAppointmentDateAndDoctorIdAndStatus(date, doctorId, AppointmentStatus.SCHEDULED);
+        List<Appointment> appointments = appointmentRepository.findByAppointmentDateAndDoctorIdAndStatus(date, doctorId, SCHEDULED);
         List<LocalTime> slots = scheduleService.getAvailableSlots(date, doctorId, appointments);
         if (!slots.contains(time)) throw new TimeNotFoundException("Doctor's schedule with time " + time + " not found");
+    }
+
+    @Override
+    public void validateAppointmentStatusIsScheduled(AppointmentStatus status) {
+        if (status != SCHEDULED) {
+            throw new AppointmentStatusMismatchException("Invalid status");
+        }
+    }
+
+    @Override
+    public void validateAppointmentStatusIsOngoing(AppointmentStatus status) {
+        if (status != ONGOING) {
+            throw new AppointmentStatusMismatchException("Invalid status");
+        }
     }
 }
