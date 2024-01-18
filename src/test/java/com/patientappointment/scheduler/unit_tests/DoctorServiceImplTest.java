@@ -5,8 +5,6 @@ import com.patientappointment.scheduler.models.entities.Doctor;
 import com.patientappointment.scheduler.repositories.doctor.DoctorRepository;
 import com.patientappointment.scheduler.services.doctor.DoctorServiceImpl;
 import com.patientappointment.scheduler.services.doctor.DoctorServiceValidation;
-import com.patientappointment.scheduler.utils.enums.DoctorLocation;
-import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import static com.patientappointment.scheduler.utils.enums.DoctorLocation.CLINIC_A;
+import static com.patientappointment.scheduler.utils.enums.DoctorSpecialization.CARDIOLOGY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -37,37 +37,50 @@ class DoctorServiceImplTest {
     @Test
     void testCreateDoctor_ShouldPass() {
         // GIVEN
-        Doctor doctor = new Doctor();
-        doctor.setFirstName("John");
-        doctor.setLastName("Doe");
-        doctor.setEmail("john@email.com");
-        doctor.setSpecialization(DoctorSpecialization.CARDIOLOGY);
-        doctor.setLocation(DoctorLocation.CLINIC_A);
+        Doctor doctor = Doctor.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .email("john@email.com")
+                .specialization(CARDIOLOGY)
+                .location(CLINIC_A)
+                .build();
 
-        Doctor savedDoctor = new Doctor();
-        savedDoctor.setFirstName("John");
-        savedDoctor.setLastName("Doe");
-        savedDoctor.setEmail("john@email.com");
-        savedDoctor.setSpecialization(DoctorSpecialization.CARDIOLOGY);
-        savedDoctor.setLocation(DoctorLocation.CLINIC_A);
+        Doctor savedDoctor = Doctor.builder()
+                .id(1L)
+                .firstName("John")
+                .lastName("Doe")
+                .email("john@email.com")
+                .specialization(CARDIOLOGY)
+                .location(CLINIC_A)
+                .build();
 
-        DoctorDTO doctorDTO = new DoctorDTO();
-        doctorDTO.setFirstName("John");
-        doctorDTO.setLastName("Doe");
-        doctorDTO.setEmail("john@email.com");
-        doctorDTO.setSpecialization(DoctorSpecialization.CARDIOLOGY);
-        doctorDTO.setLocation(DoctorLocation.CLINIC_A);
+        DoctorDTO requestDoctorDTO = DoctorDTO.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .email("john@email.com")
+                .specialization(CARDIOLOGY)
+                .location(CLINIC_A)
+                .build();
 
-        when(modelMapper.map(doctorDTO, Doctor.class)).thenReturn(doctor);
-        when(modelMapper.map(savedDoctor, DoctorDTO.class)).thenReturn(doctorDTO);
+        DoctorDTO responseDoctorDTO = DoctorDTO.builder()
+                .id(1L)
+                .firstName("John")
+                .lastName("Doe")
+                .email("john@email.com")
+                .specialization(CARDIOLOGY)
+                .location(CLINIC_A)
+                .build();
+
+        when(modelMapper.map(requestDoctorDTO, Doctor.class)).thenReturn(doctor);
+        when(modelMapper.map(savedDoctor, DoctorDTO.class)).thenReturn(responseDoctorDTO);
         when(doctorRepository.save(doctor)).thenReturn(savedDoctor);
 
         // WHEN
-        DoctorDTO savedDoctorDTO = doctorService.createDoctor(doctorDTO);
+        DoctorDTO savedDoctorDTO = doctorService.createDoctor(requestDoctorDTO);
 
         // THEN
         verify(doctorRepository, times(1)).save(doctor);
-        assertEquals(doctorDTO, savedDoctorDTO);
+        assertEquals(responseDoctorDTO, savedDoctorDTO);
     }
 }
 

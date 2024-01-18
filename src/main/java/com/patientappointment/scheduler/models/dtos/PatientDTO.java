@@ -1,12 +1,18 @@
 package com.patientappointment.scheduler.models.dtos;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 import static com.patientappointment.scheduler.utils.constants.DTOConstants.REGEX_CHAR_PATTERN;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class PatientDTO {
 

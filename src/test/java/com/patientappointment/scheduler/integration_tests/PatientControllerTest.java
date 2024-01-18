@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,12 +41,12 @@ class PatientControllerTest {
 
     @Test
     void test_CreatePatient_ShouldPass() throws Exception {
-        PatientDTO patientDTO = new PatientDTO();
-        patientDTO.setFirstName("Jane");
-        patientDTO.setLastName("Doe");
-        patientDTO.setDob(LocalDate.of(2000, 9, 22));
-        patientDTO.setAge((int) ChronoUnit.YEARS.between(patientDTO.getDob(), LocalDate.now()));
-        patientDTO.setEmail("jane@email.com");
+        PatientDTO patientDTO = PatientDTO.builder()
+                .firstName("Jane")
+                .lastName("Doe")
+                .dob(LocalDate.of(2000, 9, 22))
+                .email("jane@email.com")
+                .build();
 
         MvcResult result = mockMvc.perform(post("/api/patients")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -63,25 +62,24 @@ class PatientControllerTest {
         assertEquals(patientDTO.getFirstName(), patientDTOConverted.getFirstName());
         assertEquals(patientDTO.getLastName(), patientDTOConverted.getLastName());
         assertEquals(patientDTO.getDob(), patientDTOConverted.getDob());
-        assertEquals(patientDTO.getAge(), patientDTOConverted.getAge());
         assertEquals(patientDTO.getEmail(), patientDTOConverted.getEmail());
     }
 
     @Test
     void test_CreatePatient_ShouldFail_IfPatientWithSameEmailAlreadyExists() throws Exception {
-        PatientDTO patientDTO = new PatientDTO();
-        patientDTO.setFirstName("Jane");
-        patientDTO.setLastName("Doe");
-        patientDTO.setDob(LocalDate.of(2000, 9, 22));
-        patientDTO.setAge((int) ChronoUnit.YEARS.between(patientDTO.getDob(), LocalDate.now()));
-        patientDTO.setEmail("jane@email.com");
+        PatientDTO patientDTO = PatientDTO.builder()
+                .firstName("Jane")
+                .lastName("Doe")
+                .dob(LocalDate.of(2000, 9, 22))
+                .email("jane@email.com")
+                .build();
 
-        PatientDTO secondPatientDTO = new PatientDTO();
-        secondPatientDTO.setFirstName("Mark");
-        secondPatientDTO.setLastName("Wane");
-        secondPatientDTO.setDob(LocalDate.of(1967, 10, 15));
-        secondPatientDTO.setAge((int) ChronoUnit.YEARS.between(patientDTO.getDob(), LocalDate.now()));
-        secondPatientDTO.setEmail("jane@email.com");
+        PatientDTO secondPatientDTO = PatientDTO.builder()
+                .firstName("Mark")
+                .lastName("Wane")
+                .dob(LocalDate.of(1967, 10, 15))
+                .email("jane@email.com")
+                .build();
 
         mockMvc.perform(post("/api/patients")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -101,21 +99,21 @@ class PatientControllerTest {
 
     @Test
     void test_GetAllPatients_ShouldPass() throws Exception {
-        PatientDTO patientDTO = new PatientDTO();
-        patientDTO.setId(1L);
-        patientDTO.setFirstName("Jane");
-        patientDTO.setLastName("Doe");
-        patientDTO.setDob(LocalDate.of(2000, 9, 22));
-        patientDTO.setAge((int) ChronoUnit.YEARS.between(patientDTO.getDob(), LocalDate.now()));
-        patientDTO.setEmail("jane@email.com");
+        PatientDTO patientDTO = PatientDTO.builder()
+                .id(1L)
+                .firstName("Jane")
+                .lastName("Doe")
+                .dob(LocalDate.of(2000, 9, 22))
+                .email("jane@email.com")
+                .build();
 
-        PatientDTO secondPatientDTO = new PatientDTO();
-        secondPatientDTO.setId(2L);
-        secondPatientDTO.setFirstName("John");
-        secondPatientDTO.setLastName("Doe");
-        secondPatientDTO.setDob(LocalDate.of(1967, 10, 15));
-        secondPatientDTO.setAge((int) ChronoUnit.YEARS.between(secondPatientDTO.getDob(), LocalDate.now()));
-        secondPatientDTO.setEmail("john@email.com");
+        PatientDTO secondPatientDTO = PatientDTO.builder()
+                .id(2L)
+                .firstName("John")
+                .lastName("Doe")
+                .dob(LocalDate.of(1999, 9, 22))
+                .email("john@email.com")
+                .build();
 
         List<PatientDTO> patientDTOList = new ArrayList<>(List.of(patientDTO, secondPatientDTO));
 
