@@ -16,9 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.patientappointment.scheduler.utils.enums.AppointmentStatus.SCHEDULED;
+import static com.patientappointment.scheduler.utils.enums.AppointmentStatus.*;
 
 @Service
 @Slf4j
@@ -102,7 +103,12 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId) {
-        List<Appointment> appointments = appointmentService.getAppointments(date, doctorId, SCHEDULED);
+        List<Appointment> scheduledAppointments = appointmentService.getAppointments(date, doctorId, SCHEDULED);
+        List<Appointment> openedAppointments = appointmentService.getAppointments(date, doctorId, ONGOING);
+        List<Appointment> closedAppointments = appointmentService.getAppointments(date, doctorId, COMPLETED);
+        List<Appointment> appointments = new ArrayList<>(scheduledAppointments);
+        appointments.addAll(openedAppointments);
+        appointments.addAll(closedAppointments);
 
         return scheduleService.getAvailableSlots(date, doctorId, appointments);
     }
