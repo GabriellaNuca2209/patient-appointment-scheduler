@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -60,9 +59,9 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getDoctorSchedules(doctorId));
     }
 
-    @GetMapping("/{date}/doctors/{doctorId}/slots")
-    public ResponseEntity<List<LocalTime>> getAvailableSlots(@PathVariable LocalDate date, @PathVariable Long doctorId) {
-        return ResponseEntity.ok(patientService.getAvailableSlots(date, doctorId));
+    @GetMapping("/{patientId}/doctors/{doctorId}/schedules/{scheduleId}/slots")
+    public ResponseEntity<List<LocalTime>> getAvailableSlots(@PathVariable Long patientId, @PathVariable Long scheduleId, @PathVariable Long doctorId) {
+        return ResponseEntity.ok(patientService.getAvailableSlots(patientId, scheduleId, doctorId));
     }
 
     @PostMapping("/{patientId}/doctors/{doctorId}/appointments")

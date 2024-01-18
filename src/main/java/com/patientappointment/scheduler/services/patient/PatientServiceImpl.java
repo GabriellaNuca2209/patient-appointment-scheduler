@@ -7,14 +7,12 @@ import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.PatientRepository;
 import com.patientappointment.scheduler.services.appointment.AppointmentService;
 import com.patientappointment.scheduler.services.doctor.DoctorService;
-import com.patientappointment.scheduler.services.schedule.ScheduleService;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +26,14 @@ public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
     private final PatientServiceValidation patientServiceValidation;
     private final DoctorService doctorService;
-    private final ScheduleService scheduleService;
     private final AppointmentService appointmentService;
     private final ModelMapper modelMapper;
 
     public PatientServiceImpl(PatientRepository patientRepository, PatientServiceValidation patientServiceValidation, DoctorService doctorService,
-                              ScheduleService scheduleService, AppointmentService appointmentService, ModelMapper modelMapper) {
+                              AppointmentService appointmentService, ModelMapper modelMapper) {
         this.patientRepository = patientRepository;
         this.patientServiceValidation = patientServiceValidation;
         this.doctorService = doctorService;
-        this.scheduleService = scheduleService;
         this.appointmentService = appointmentService;
         this.modelMapper = modelMapper;
     }
@@ -102,15 +98,19 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId) {
-        List<Appointment> scheduledAppointments = appointmentService.getAppointments(date, doctorId, SCHEDULED);
-        List<Appointment> openedAppointments = appointmentService.getAppointments(date, doctorId, ONGOING);
-        List<Appointment> closedAppointments = appointmentService.getAppointments(date, doctorId, COMPLETED);
+    public List<LocalTime> getAvailableSlots(Long patientId, Long scheduleId, Long doctorId) {
+        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException("Patient with id " + patientId + " not found"));
+        DoctorScheduleDTO scheduleDTO = doctorService.getDoctorSchedule(scheduleId);
+        List<Appointment> scheduledAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, SCHEDULED);
+        List<Appointment> openedAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, ONGOING);
+        List<Appointment> closedAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, COMPLETED);
+
         List<Appointment> appointments = new ArrayList<>(scheduledAppointments);
         appointments.addAll(openedAppointments);
         appointments.addAll(closedAppointments);
+        log.info("Patient {} : {} retrieved available slots", patient.getFirstName(), patient.getLastName());
 
-        return scheduleService.getAvailableSlots(date, doctorId, appointments);
+        return doctorService.getAvailableSlots(scheduleDTO.getWorkingDate(), doctorId, appointments);
     }
 
     @Override

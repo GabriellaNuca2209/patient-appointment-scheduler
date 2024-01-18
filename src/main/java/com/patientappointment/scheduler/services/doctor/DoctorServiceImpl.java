@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static com.patientappointment.scheduler.utils.enums.AppointmentStatus.SCHEDULED;
@@ -71,6 +73,11 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    public List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId, List<Appointment> appointments) {
+        return scheduleService.getAvailableSlots(date, doctorId, appointments);
+    }
+
+    @Override
     public void deleteSchedule(Long doctorId, Long scheduleId) {
         doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
         log.info("Doctor with id " + doctorId + " deleted schedule with id " + scheduleId);
@@ -93,6 +100,11 @@ public class DoctorServiceImpl implements DoctorService {
         doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
 
         return scheduleService.getDoctorSchedules(doctorId);
+    }
+
+    @Override
+    public DoctorScheduleDTO getDoctorSchedule(Long scheduleId) {
+        return scheduleService.getSchedule(scheduleId);
     }
 
     @Override
