@@ -14,6 +14,7 @@ public interface DoctorService {
     List<DoctorDTO> getAllDoctors();
     DoctorDTO getDoctor(Long id);
     DoctorScheduleDTO createSchedule(DoctorScheduleDTO doctorScheduleDTO, Long doctorId);
+    void deleteSchedule(Long doctorId, Long scheduleId);
     List<DoctorDTO> getFilteredDoctors(DoctorSpecialization specialization, DoctorLocation location);
     List<DoctorScheduleDTO> getDoctorSchedules(Long doctorId);
     AppointmentDTO openConsultation(Long doctorId, Long appointmentId);

@@ -35,6 +35,11 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.createSchedule(doctorScheduleDTO, doctorId));
     }
 
+    @DeleteMapping("/{doctorId}/schedules/{scheduleId}")
+    public void deleteSchedule(@PathVariable Long doctorId, @PathVariable Long scheduleId) {
+        doctorService.deleteSchedule(doctorId, scheduleId);
+    }
+
     @PutMapping("/{doctorId}/scheduled/appointments/{appointmentId}")
     public ResponseEntity<AppointmentDTO> openConsultation(@PathVariable Long doctorId, @PathVariable Long appointmentId) {
         return ResponseEntity.ok(doctorService.openConsultation(doctorId, appointmentId));

@@ -4,6 +4,7 @@ import com.patientappointment.scheduler.exceptions.doctor.DoctorNotFoundExceptio
 import com.patientappointment.scheduler.models.dtos.AppointmentDTO;
 import com.patientappointment.scheduler.models.dtos.DoctorDTO;
 import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
+import com.patientappointment.scheduler.models.entities.Appointment;
 import com.patientappointment.scheduler.models.entities.Doctor;
 import com.patientappointment.scheduler.repositories.doctor.DoctorRepository;
 import com.patientappointment.scheduler.services.appointment.AppointmentService;
@@ -16,8 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+import static com.patientappointment.scheduler.utils.enums.AppointmentStatus.SCHEDULED;
+
 @Slf4j
+@Service
 public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepository doctorRepository;
@@ -68,6 +71,15 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    public void deleteSchedule(Long doctorId, Long scheduleId) {
+        doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
+        log.info("Doctor with id " + doctorId + " deleted schedule with id " + scheduleId);
+        cancelDoctorAppointments(doctorId, scheduleId);
+
+        scheduleService.deleteSchedule(scheduleId);
+    }
+
+    @Override
     public List<DoctorDTO> getFilteredDoctors(DoctorSpecialization specialization, DoctorLocation location) {
         if (specialization == null && location == null) {
             return getAllDoctors();
@@ -99,5 +111,14 @@ public class DoctorServiceImpl implements DoctorService {
         log.info("patient for doctor: " + doctor.getPatients());
 
         return appointmentDTO;
+    }
+
+    private void cancelDoctorAppointments(Long doctorId, Long scheduleId) {
+        DoctorScheduleDTO doctorScheduleDTO = scheduleService.getSchedule(scheduleId);
+        List<Appointment> appointments = appointmentService.getAppointments(doctorScheduleDTO.getWorkingDate(), doctorId, SCHEDULED);
+
+        for (Appointment appointment : appointments) {
+            appointmentService.cancelDoctorAppointment(appointment);
+        }
     }
 }

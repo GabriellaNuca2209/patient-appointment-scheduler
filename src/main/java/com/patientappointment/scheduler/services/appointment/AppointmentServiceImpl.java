@@ -68,6 +68,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    public void cancelDoctorAppointment(Appointment appointment) {
+        appointment.setStatus(CANCELED);
+        appointmentRepository.save(appointment);
+        log.info("Canceled appointment " + appointment.getAppointmentDate() + " : " + appointment.getAppointmentTime());
+    }
+
+    @Override
     public AppointmentDTO openConsultation(Long appointmentId) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new AppointmentNotFoundException("Appointment with id " + appointmentId + " not found"));
