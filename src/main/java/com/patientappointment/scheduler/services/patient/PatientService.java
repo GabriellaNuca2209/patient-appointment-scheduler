@@ -4,7 +4,6 @@ import com.patientappointment.scheduler.models.dtos.*;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -17,7 +16,7 @@ public interface PatientService {
     void deletePatient(Long id);
     List<DoctorDTO> getFilteredDoctors(DoctorSpecialization specialization, DoctorLocation location);
     List<DoctorScheduleDTO> getDoctorSchedules(Long doctorId);
-    List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId);
+    List<LocalTime> getAvailableSlots(Long patientId, Long scheduleId, Long doctorId);
     AppointmentDTO createAppointment(AppointmentDTO appointmentDTO, Long patientId, Long doctorId);
     List<AppointmentDTO> getPatientAppointments(Long id);
     AppointmentDTO cancelAppointment(Long patientId, Long appointmentId);
