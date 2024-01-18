@@ -2,6 +2,7 @@ package com.patientappointment.scheduler.services.doctor;
 
 import com.patientappointment.scheduler.exceptions.doctor.DoctorAlreadyExistsException;
 import com.patientappointment.scheduler.exceptions.schedule.ScheduleOutOfBoundsException;
+import com.patientappointment.scheduler.exceptions.schedule.ScheduleShiftsUnorderedException;
 import com.patientappointment.scheduler.models.dtos.DoctorDTO;
 import com.patientappointment.scheduler.models.entities.Doctor;
 import com.patientappointment.scheduler.repositories.doctor.DoctorRepository;
@@ -33,6 +34,13 @@ public class DoctorServiceValidationImpl implements DoctorServiceValidation {
         if (start.isBefore(LocalTime.parse(OPENING_HOURS)) || end.isAfter(LocalTime.parse(CLOSING_HOURS))
             || end.isBefore(LocalTime.parse(OPENING_HOURS)) || start.isAfter(LocalTime.parse(CLOSING_HOURS))) {
             throw new ScheduleOutOfBoundsException("Time outside working hours");
+        }
+    }
+
+    @Override
+    public void validateScheduleShiftsAreInOrder(LocalTime start, LocalTime end) {
+        if (start.isAfter(end)) {
+            throw new ScheduleShiftsUnorderedException("Shifts unordered.");
         }
     }
 }
