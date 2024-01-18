@@ -14,8 +14,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.patientappointment.scheduler.utils.enums.AppointmentStatus.*;
 
@@ -100,14 +101,10 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public List<LocalTime> getAvailableSlots(Long patientId, Long scheduleId, Long doctorId) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException("Patient with id " + patientId + " not found"));
-        DoctorScheduleDTO scheduleDTO = doctorService.getDoctorSchedule(scheduleId);
-        List<Appointment> scheduledAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, SCHEDULED);
-        List<Appointment> openedAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, ONGOING);
-        List<Appointment> closedAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, COMPLETED);
 
-        List<Appointment> appointments = new ArrayList<>(scheduledAppointments);
-        appointments.addAll(openedAppointments);
-        appointments.addAll(closedAppointments);
+        DoctorScheduleDTO scheduleDTO = doctorService.getDoctorSchedule(scheduleId);
+        List<Appointment> appointments = getAppointmentsFromSchedule(scheduleDTO, doctorId);
+
         log.info("Patient {} : {} retrieved available slots", patient.getFirstName(), patient.getLastName());
 
         return doctorService.getAvailableSlots(scheduleDTO.getWorkingDate(), doctorId, appointments);
@@ -133,5 +130,15 @@ public class PatientServiceImpl implements PatientService {
         patientRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException("Patient with id " + patientId + " not found"));
 
         return appointmentService.cancelAppointment(appointmentId);
+    }
+
+    private List<Appointment> getAppointmentsFromSchedule(DoctorScheduleDTO scheduleDTO, Long doctorId) {
+        List<Appointment> scheduledAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, SCHEDULED);
+        List<Appointment> openedAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, ONGOING);
+        List<Appointment> closedAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, COMPLETED);
+
+        return Stream.of(scheduledAppointments, openedAppointments, closedAppointments)
+                .flatMap(Collection::stream)
+                .toList();
     }
 }
