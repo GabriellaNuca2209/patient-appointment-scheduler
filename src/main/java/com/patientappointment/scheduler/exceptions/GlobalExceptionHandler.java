@@ -11,6 +11,7 @@ import com.patientappointment.scheduler.exceptions.patient.PatientAlreadyExistsE
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
 import com.patientappointment.scheduler.exceptions.patient.UnderageException;
 import com.patientappointment.scheduler.exceptions.schedule.ScheduleOutOfBoundsException;
+import com.patientappointment.scheduler.exceptions.schedule.ScheduleShiftsUnorderedException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +35,13 @@ public class GlobalExceptionHandler {
         exception.getBindingResult().getFieldErrors()
                 .forEach(error -> result.put(error.getField(), error.getDefaultMessage()));
 
+        return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", "Invalid input");
         return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
     }
 
@@ -96,6 +105,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ScheduleOutOfBoundsException.class)
     public ResponseEntity<Object> handleScheduleOutOfBoundsException(ScheduleOutOfBoundsException e) {
+        return getResponse(e, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ScheduleShiftsUnorderedException.class)
+    public ResponseEntity<Object> handleScheduleShiftsUnorderedException(ScheduleShiftsUnorderedException e) {
         return getResponse(e, HttpStatus.BAD_REQUEST);
     }
 

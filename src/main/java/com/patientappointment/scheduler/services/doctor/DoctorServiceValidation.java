@@ -8,4 +8,5 @@ public interface DoctorServiceValidation {
 
     void validateDoctorAlreadyExists(DoctorDTO doctorDTO);
     void validateScheduleBetweenWorkingHours(LocalTime start, LocalTime end);
+    void validateScheduleShiftsAreInOrder(LocalTime start, LocalTime end);
 }

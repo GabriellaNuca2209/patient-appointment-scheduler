@@ -26,7 +26,8 @@ public class DoctorServiceImpl implements DoctorService {
     private final AppointmentService appointmentService;
     private final ModelMapper modelMapper;
 
-    public DoctorServiceImpl(DoctorRepository doctorRepository, DoctorServiceValidation doctorServiceValidation, ScheduleService scheduleService, AppointmentService appointmentService, ModelMapper modelMapper) {
+    public DoctorServiceImpl(DoctorRepository doctorRepository, DoctorServiceValidation doctorServiceValidation, ScheduleService scheduleService,
+                             AppointmentService appointmentService, ModelMapper modelMapper) {
         this.doctorRepository = doctorRepository;
         this.doctorServiceValidation = doctorServiceValidation;
         this.scheduleService = scheduleService;
@@ -58,6 +59,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public DoctorScheduleDTO createSchedule(DoctorScheduleDTO doctorScheduleDTO, Long doctorId) {
         doctorServiceValidation.validateScheduleBetweenWorkingHours(doctorScheduleDTO.getStartShift(), doctorScheduleDTO.getEndShift());
+        doctorServiceValidation.validateScheduleShiftsAreInOrder(doctorScheduleDTO.getStartShift(), doctorScheduleDTO.getEndShift());
 
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
         doctorScheduleDTO.setDoctor(doctor);
