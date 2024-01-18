@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,69 +39,82 @@ class PatientServiceImplTest {
     @Test
     void testCreatePatient_ShouldPass() {
         // GIVEN
-        Patient patient = new Patient();
-        patient.setFirstName("Jane");
-        patient.setLastName("Doe");
-        patient.setDob(LocalDate.of(2000, 9, 22));
-        patient.setEmail("jane@email.com");
+        Patient patient = Patient.builder()
+                .firstName("Jane")
+                .lastName("Doe")
+                .dob(LocalDate.of(2000, 9, 22))
+                .email("jane@email.com")
+                .build();
 
-        Patient savedPatient = new Patient();
-        savedPatient.setId(1L);
-        savedPatient.setFirstName("Jane");
-        savedPatient.setLastName("Doe");
-        savedPatient.setDob(LocalDate.of(2000, 9, 22));
-        savedPatient.setEmail("jane@email.com");
+        Patient savedPatient = Patient.builder()
+                .id(1L)
+                .firstName("Jane")
+                .lastName("Doe")
+                .dob(LocalDate.of(2000, 9, 22))
+                .email("jane@email.com")
+                .build();
 
-        PatientDTO patientDTO = new PatientDTO();
-        patientDTO.setId(1L);
-        patientDTO.setFirstName("Jane");
-        patientDTO.setLastName("Doe");
-        patientDTO.setDob(LocalDate.of(2000, 9, 22));
-        patientDTO.setAge((int) ChronoUnit.YEARS.between(patientDTO.getDob(), LocalDate.now()));
-        patientDTO.setEmail("jane@email.com");
+        PatientDTO requestPatientDTO = PatientDTO.builder()
+                .firstName("Jane")
+                .lastName("Doe")
+                .dob(LocalDate.of(2000, 9, 22))
+                .email("jane@email.com")
+                .build();
 
-        when(modelMapper.map(patientDTO, Patient.class)).thenReturn(patient);
-        when(modelMapper.map(savedPatient, PatientDTO.class)).thenReturn(patientDTO);
+        PatientDTO responsePatientDTO = PatientDTO.builder()
+                .id(1L)
+                .firstName("Jane")
+                .lastName("Doe")
+                .dob(LocalDate.of(2000, 9, 22))
+                .email("jane@email.com")
+                .build();
+
+        when(modelMapper.map(requestPatientDTO, Patient.class)).thenReturn(patient);
+        when(modelMapper.map(savedPatient, PatientDTO.class)).thenReturn(responsePatientDTO);
         when(patientRepository.save(patient)).thenReturn(savedPatient);
 
         // WHEN
-        PatientDTO savedPatientDTO = patientService.createPatient(patientDTO);
+        PatientDTO savedPatientDTO = patientService.createPatient(requestPatientDTO);
 
         // THEN
         verify(patientRepository, times(1)).save(patient);
-        assertEquals(patientDTO, savedPatientDTO);
+        assertEquals(responsePatientDTO, savedPatientDTO);
     }
 
     @Test
     void testGetAllPatients_ShouldPass() {
         // GIVEN
-        PatientDTO expectedPatientDTO1 = new PatientDTO();
-        expectedPatientDTO1.setId(1L);
-        expectedPatientDTO1.setFirstName("Jane");
-        expectedPatientDTO1.setLastName("Doe");
-        expectedPatientDTO1.setDob(LocalDate.of(2000, 9, 22));
-        expectedPatientDTO1.setEmail("jane@email.com");
+        PatientDTO expectedPatientDTO1 = PatientDTO.builder()
+                .id(1L)
+                .firstName("Jane")
+                .lastName("Doe")
+                .dob(LocalDate.of(2000, 9, 22))
+                .email("jane@email.com")
+                .build();
 
-        PatientDTO expectedPatientDTO2 = new PatientDTO();
-        expectedPatientDTO2.setId(2L);
-        expectedPatientDTO2.setFirstName("John");
-        expectedPatientDTO2.setLastName("Doe");
-        expectedPatientDTO2.setDob(LocalDate.of(1999, 9, 22));
-        expectedPatientDTO2.setEmail("john@email.com");
+        PatientDTO expectedPatientDTO2 = PatientDTO.builder()
+                .id(2L)
+                .firstName("John")
+                .lastName("Doe")
+                .dob(LocalDate.of(1999, 9, 22))
+                .email("john@email.com")
+                .build();
 
-        Patient patient1 = new Patient();
-        patient1.setId(1L);
-        patient1.setFirstName("Jane");
-        patient1.setLastName("Doe");
-        patient1.setDob(LocalDate.of(2000, 9, 22));
-        patient1.setEmail("jane@email.com");
+        Patient patient1 = Patient.builder()
+                .id(1L)
+                .firstName("Jane")
+                .lastName("Doe")
+                .dob(LocalDate.of(2000, 9, 22))
+                .email("jane@email.com")
+                .build();
 
-        Patient patient2 = new Patient();
-        patient2.setId(2L);
-        patient2.setFirstName("John");
-        patient2.setLastName("Doe");
-        patient2.setDob(LocalDate.of(1999, 9, 22));
-        patient2.setEmail("john@email.com");
+        Patient patient2 = Patient.builder()
+                .id(2L)
+                .firstName("John")
+                .lastName("Doe")
+                .dob(LocalDate.of(1999, 9, 22))
+                .email("john@email.com")
+                .build();
 
         List<PatientDTO> expectedPatientDTOList = new ArrayList<>(List.of(expectedPatientDTO1, expectedPatientDTO2));
         List<Patient> patientList = new ArrayList<>(List.of(patient1, patient2));

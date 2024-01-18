@@ -1,18 +1,18 @@
 package com.patientappointment.scheduler.models.dtos;
 
-import com.patientappointment.scheduler.models.entities.Appointment;
-import com.patientappointment.scheduler.models.entities.DoctorSchedule;
-import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
-
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class DoctorDTO {
 

@@ -2,8 +2,6 @@ package com.patientappointment.scheduler.integration_tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.patientappointment.scheduler.models.dtos.DoctorDTO;
-import com.patientappointment.scheduler.utils.enums.DoctorLocation;
-import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -17,6 +15,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static com.patientappointment.scheduler.utils.enums.DoctorLocation.CLINIC_A;
+import static com.patientappointment.scheduler.utils.enums.DoctorSpecialization.CARDIOLOGY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,12 +37,13 @@ class DoctorControllerTest {
 
     @Test
     void test_CreateDoctor_ShouldPass() throws Exception {
-        DoctorDTO doctorDTO = new DoctorDTO();
-        doctorDTO.setFirstName("John");
-        doctorDTO.setLastName("Doe");
-        doctorDTO.setEmail("john@email.com");
-        doctorDTO.setSpecialization(DoctorSpecialization.CARDIOLOGY);
-        doctorDTO.setLocation(DoctorLocation.CLINIC_A);
+        DoctorDTO doctorDTO = DoctorDTO.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .email("john@email.com")
+                .specialization(CARDIOLOGY)
+                .location(CLINIC_A)
+                .build();
 
         MvcResult result = mockMvc.perform(post("/api/doctors")
                         .contentType(MediaType.APPLICATION_JSON)
