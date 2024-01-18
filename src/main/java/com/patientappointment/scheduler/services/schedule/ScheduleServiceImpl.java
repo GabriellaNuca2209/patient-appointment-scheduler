@@ -1,11 +1,10 @@
 package com.patientappointment.scheduler.services.schedule;
 
+import com.patientappointment.scheduler.exceptions.schedule.ScheduleNotFoundException;
 import com.patientappointment.scheduler.models.dtos.DoctorScheduleDTO;
 import com.patientappointment.scheduler.models.entities.Appointment;
 import com.patientappointment.scheduler.models.entities.DoctorSchedule;
 import com.patientappointment.scheduler.repositories.ScheduleRepository;
-import com.patientappointment.scheduler.services.appointment.AppointmentService;
-import com.patientappointment.scheduler.utils.enums.AppointmentStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -34,6 +33,21 @@ public class ScheduleServiceImpl implements ScheduleService {
         DoctorSchedule savedSchedule = scheduleRepository.save(modelMapper.map(doctorScheduleDTO, DoctorSchedule.class));
 
         return modelMapper.map(savedSchedule, DoctorScheduleDTO.class);
+    }
+
+    @Override
+    public void deleteSchedule(Long scheduleId) {
+        DoctorSchedule schedule =  scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new ScheduleNotFoundException("Schedule with id " + scheduleId + " not found"));
+        scheduleRepository.delete(schedule);
+    }
+
+    @Override
+    public DoctorScheduleDTO getSchedule(Long scheduleId) {
+        DoctorSchedule doctorSchedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new ScheduleNotFoundException("Schedule with id " + scheduleId + " not found"));
+
+        return modelMapper.map(doctorSchedule, DoctorScheduleDTO.class);
     }
 
     @Override

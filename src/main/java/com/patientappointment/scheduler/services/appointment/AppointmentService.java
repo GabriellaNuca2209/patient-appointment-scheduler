@@ -15,6 +15,7 @@ public interface AppointmentService {
     List<Appointment> getAppointments(LocalDate date, Long doctorId, AppointmentStatus status);
     List<AppointmentDTO> getPatientAppointments(Long id);
     AppointmentDTO cancelAppointment(Long appointmentId);
+    void cancelDoctorAppointment(Appointment appointment);
     AppointmentDTO openConsultation(Long appointmentId);
     AppointmentDTO closeConsultation(Long appointmentId);
 }

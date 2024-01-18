@@ -10,6 +10,7 @@ import com.patientappointment.scheduler.exceptions.patient.DobFutureException;
 import com.patientappointment.scheduler.exceptions.patient.PatientAlreadyExistsException;
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
 import com.patientappointment.scheduler.exceptions.patient.UnderageException;
+import com.patientappointment.scheduler.exceptions.schedule.ScheduleNotFoundException;
 import com.patientappointment.scheduler.exceptions.schedule.ScheduleOutOfBoundsException;
 import com.patientappointment.scheduler.exceptions.schedule.ScheduleShiftsUnorderedException;
 import jakarta.validation.ConstraintViolation;
@@ -101,6 +102,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DateNotFoundException.class)
     public ResponseEntity<Object> handleDateNotFoundException(DateNotFoundException e) {
         return getResponse(e, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ScheduleNotFoundException.class)
+    public ResponseEntity<Object> handleScheduleNotFoundException(ScheduleNotFoundException e) {
+        return getResponse(e, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ScheduleOutOfBoundsException.class)
