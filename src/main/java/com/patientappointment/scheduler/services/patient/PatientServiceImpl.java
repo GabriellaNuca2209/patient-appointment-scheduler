@@ -8,7 +8,6 @@ import com.patientappointment.scheduler.repositories.PatientRepository;
 import com.patientappointment.scheduler.services.appointment.AppointmentService;
 import com.patientappointment.scheduler.services.doctor.DoctorService;
 import com.patientappointment.scheduler.services.schedule.ScheduleService;
-import com.patientappointment.scheduler.utils.enums.AppointmentStatus;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.patientappointment.scheduler.utils.enums.AppointmentStatus.*;
 
 @Service
 @Slf4j
@@ -30,7 +32,8 @@ public class PatientServiceImpl implements PatientService {
     private final AppointmentService appointmentService;
     private final ModelMapper modelMapper;
 
-    public PatientServiceImpl(PatientRepository patientRepository, PatientServiceValidation patientServiceValidation, DoctorService doctorService, ScheduleService scheduleService, AppointmentService appointmentService, ModelMapper modelMapper) {
+    public PatientServiceImpl(PatientRepository patientRepository, PatientServiceValidation patientServiceValidation, DoctorService doctorService,
+                              ScheduleService scheduleService, AppointmentService appointmentService, ModelMapper modelMapper) {
         this.patientRepository = patientRepository;
         this.patientServiceValidation = patientServiceValidation;
         this.doctorService = doctorService;
@@ -100,7 +103,12 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<LocalTime> getAvailableSlots(LocalDate date, Long doctorId) {
-        List<Appointment> appointments = appointmentService.getAppointments(date, doctorId, AppointmentStatus.SCHEDULED);
+        List<Appointment> scheduledAppointments = appointmentService.getAppointments(date, doctorId, SCHEDULED);
+        List<Appointment> openedAppointments = appointmentService.getAppointments(date, doctorId, ONGOING);
+        List<Appointment> closedAppointments = appointmentService.getAppointments(date, doctorId, COMPLETED);
+        List<Appointment> appointments = new ArrayList<>(scheduledAppointments);
+        appointments.addAll(openedAppointments);
+        appointments.addAll(closedAppointments);
 
         return scheduleService.getAvailableSlots(date, doctorId, appointments);
     }

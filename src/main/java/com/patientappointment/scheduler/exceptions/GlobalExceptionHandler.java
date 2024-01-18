@@ -1,6 +1,7 @@
 package com.patientappointment.scheduler.exceptions;
 
 import com.patientappointment.scheduler.exceptions.appointment.AppointmentNotFoundException;
+import com.patientappointment.scheduler.exceptions.appointment.AppointmentStatusMismatchException;
 import com.patientappointment.scheduler.exceptions.appointment.DateNotFoundException;
 import com.patientappointment.scheduler.exceptions.appointment.TimeNotFoundException;
 import com.patientappointment.scheduler.exceptions.doctor.DoctorAlreadyExistsException;
@@ -78,6 +79,11 @@ public class GlobalExceptionHandler {
         return getResponse(e, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AppointmentStatusMismatchException.class)
+    public ResponseEntity<Object> handleAppointmentStatusMismatchException(AppointmentStatusMismatchException e) {
+        return getResponse(e, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(TimeNotFoundException.class)
     public ResponseEntity<Object> handleTimeNotFoundException(TimeNotFoundException e) {
         return getResponse(e, HttpStatus.NOT_FOUND);
@@ -85,7 +91,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DateNotFoundException.class)
     public ResponseEntity<Object> handleDateNotFoundException(DateNotFoundException e) {
-        return getResponse(e, HttpStatus.NOT_FOUND);
+        return getResponse(e, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ScheduleOutOfBoundsException.class)

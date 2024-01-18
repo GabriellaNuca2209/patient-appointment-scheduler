@@ -36,7 +36,12 @@ public class Doctor {
     @OrderBy("id")
     private Set<DoctorSchedule> schedules = new HashSet<>();
 
-    @ManyToMany(mappedBy = "doctors")
+    @ManyToMany
+    @JoinTable(
+            name = "doctor_patient",
+            joinColumns = @JoinColumn(name = "doctor_id"),
+            inverseJoinColumns = @JoinColumn(name = "patient_id")
+    )
     private Set<Patient> patients = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
