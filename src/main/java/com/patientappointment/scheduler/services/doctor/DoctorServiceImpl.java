@@ -120,7 +120,7 @@ public class DoctorServiceImpl implements DoctorService {
         AppointmentDTO appointmentDTO = appointmentService.closeConsultation(appointmentId);
         doctor.getPatients().add(appointmentDTO.getPatient());
         doctorRepository.save(doctor);
-        log.info("patient for doctor: " + doctor.getPatients());
+        log.info("patients for doctor: " + doctor.getPatients());
 
         return appointmentDTO;
     }
