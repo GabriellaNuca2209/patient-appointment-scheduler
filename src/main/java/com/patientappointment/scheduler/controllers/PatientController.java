@@ -48,15 +48,16 @@ public class PatientController {
         patientService.deletePatient(id);
     }
 
-    @GetMapping("/filtered/doctors")
+    @GetMapping("{patientId}/filtered/doctors")
     public ResponseEntity<List<DoctorDTO>> getAllAndFilteredDoctors(@RequestParam(value = "specialization", required = false) DoctorSpecialization specialization,
-                                                                    @RequestParam(value = "location", required = false) DoctorLocation location) {
-        return ResponseEntity.ok(patientService.getFilteredDoctors(specialization, location));
+                                                                    @RequestParam(value = "location", required = false) DoctorLocation location,
+                                                                    @PathVariable Long patientId) {
+        return ResponseEntity.ok(patientService.getFilteredDoctors(specialization, location, patientId));
     }
 
-    @GetMapping("/doctors/{doctorId}/schedules")
-    public ResponseEntity<List<DoctorScheduleDTO>> getDoctorSchedules(@PathVariable Long doctorId) {
-        return ResponseEntity.ok(patientService.getDoctorSchedules(doctorId));
+    @GetMapping("{patientId}/doctors/{doctorId}/schedules")
+    public ResponseEntity<List<DoctorScheduleDTO>> getDoctorSchedules(@PathVariable Long patientId, @PathVariable Long doctorId) {
+        return ResponseEntity.ok(patientService.getDoctorSchedules(patientId, doctorId));
     }
 
     @GetMapping("/{patientId}/doctors/{doctorId}/schedules/{scheduleId}/slots")
@@ -71,9 +72,9 @@ public class PatientController {
         return ResponseEntity.ok(patientService.createAppointment(appointmentDTO, patientId, doctorId));
     }
 
-    @GetMapping("/{id}/appointments")
-    public ResponseEntity<List<AppointmentDTO>> getPatientAppointments(@PathVariable Long id) {
-        return ResponseEntity.ok(patientService.getPatientAppointments(id));
+    @GetMapping("/{patientId}/appointments")
+    public ResponseEntity<List<AppointmentDTO>> getPatientAppointments(@PathVariable Long patientId) {
+        return ResponseEntity.ok(patientService.getPatientAppointments(patientId));
     }
 
     @PutMapping("/{patientId}/appointments/{appointmentId}")
