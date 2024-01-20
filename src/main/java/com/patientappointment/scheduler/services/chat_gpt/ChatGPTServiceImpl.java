@@ -1,9 +1,11 @@
 package com.patientappointment.scheduler.services.chat_gpt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.patientappointment.scheduler.models.dtos.PatientDTO;
 import com.patientappointment.scheduler.models.dtos.chat_gpt.ChatGPTRequestDTO;
 import com.patientappointment.scheduler.models.dtos.chat_gpt.ChatGPTResponseDTO;
 import com.patientappointment.scheduler.models.dtos.chat_gpt.MessageDTO;
+import com.patientappointment.scheduler.services.patient.PatientService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -11,7 +13,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,16 +28,21 @@ public class ChatGPTServiceImpl implements ChatGPTService {
     private String key;
 
     private final ObjectMapper objectMapper;
+    private final PatientService patientService;
 
-    public ChatGPTServiceImpl(ObjectMapper objectMapper) {
+    public ChatGPTServiceImpl(ObjectMapper objectMapper, PatientService patientService) {
         this.objectMapper = objectMapper;
+        this.patientService = patientService;
     }
 
     @Override
-    public String processSearch(String query) {
+    public String processSearch(String query, Long patientId) {
+        PatientDTO patientDTO =  patientService.getPatient(patientId);
         ChatGPTRequestDTO chatGPTRequestDTO = new ChatGPTRequestDTO();
         chatGPTRequestDTO.setModel(model);
-        chatGPTRequestDTO.getMessages().add(new MessageDTO("assistant", "You are a medical assistant. Please answer using up to 100 tokens."));
+        chatGPTRequestDTO.getMessages().add(new MessageDTO("system", "You are a medical assistant. " +
+                "Your role is to help patients choose the correct medical specialization based on their problem. " +
+                "Please address him with the name " + patientDTO.getFirstName() + " Please answer using up to 100 tokens."));
         chatGPTRequestDTO.getMessages().add(new MessageDTO("user", query));
 
         return getResponse(chatGPTRequestDTO);
@@ -71,5 +77,3 @@ public class ChatGPTServiceImpl implements ChatGPTService {
     }
 
 }
-
-
