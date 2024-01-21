@@ -43,6 +43,7 @@ public class ChatGPTServiceImpl implements ChatGPTService {
         chatGPTRequestDTO.getMessages().add(new MessageDTO("system", "You are a medical assistant. " +
                 "Your role is to help patients choose the correct medical specialization based on their problem. " +
                 "Please address him with the name " + patientDTO.getFirstName() + " Please answer using up to 100 tokens."));
+
         chatGPTRequestDTO.getMessages().add(new MessageDTO("user", query));
 
         return getResponse(chatGPTRequestDTO);
@@ -75,5 +76,4 @@ public class ChatGPTServiceImpl implements ChatGPTService {
 
         return post;
     }
-
 }
