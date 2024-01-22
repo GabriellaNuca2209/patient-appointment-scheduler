@@ -103,11 +103,6 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public DoctorScheduleDTO getDoctorSchedule(Long scheduleId) {
-        return scheduleService.getSchedule(scheduleId);
-    }
-
-    @Override
     public AppointmentDTO openConsultation(Long doctorId, Long appointmentId) {
         doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
 
