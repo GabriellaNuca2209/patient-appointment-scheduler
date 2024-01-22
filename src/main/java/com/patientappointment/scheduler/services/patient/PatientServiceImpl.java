@@ -5,8 +5,7 @@ import com.patientappointment.scheduler.models.dtos.*;
 import com.patientappointment.scheduler.models.entities.Appointment;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.PatientRepository;
-import com.patientappointment.scheduler.services.appointment.AppointmentService;
-import com.patientappointment.scheduler.services.doctor.DoctorService;
+import com.patientappointment.scheduler.services.medical.patient.PatientMedicalService;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
 import lombok.extern.slf4j.Slf4j;
@@ -26,16 +25,14 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientServiceValidation patientServiceValidation;
-    private final DoctorService doctorService;
-    private final AppointmentService appointmentService;
+    private final PatientMedicalService patientMedicalService;
     private final ModelMapper modelMapper;
 
-    public PatientServiceImpl(PatientRepository patientRepository, PatientServiceValidation patientServiceValidation, DoctorService doctorService,
-                              AppointmentService appointmentService, ModelMapper modelMapper) {
+    public PatientServiceImpl(PatientRepository patientRepository, PatientServiceValidation patientServiceValidation,
+                              PatientMedicalService patientMedicalService, ModelMapper modelMapper) {
         this.patientRepository = patientRepository;
         this.patientServiceValidation = patientServiceValidation;
-        this.doctorService = doctorService;
-        this.appointmentService = appointmentService;
+        this.patientMedicalService = patientMedicalService;
         this.modelMapper = modelMapper;
     }
 
@@ -83,7 +80,7 @@ public class PatientServiceImpl implements PatientService {
         Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException("Patient with id " + patientId + " not found"));
         log.info("Patient {} : {} searched doctors with filter option", patient.getFirstName(), patient.getLastName());
 
-        return doctorService.getFilteredDoctors(specialization, location);
+        return patientMedicalService.getFilteredDoctors(specialization, location);
     }
 
     @Override
@@ -91,40 +88,40 @@ public class PatientServiceImpl implements PatientService {
         Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException("Patient with id " + patientId + " not found"));
         log.info("Patient {} : {} searched for doctor's schedule", patient.getFirstName(), patient.getLastName());
 
-        return doctorService.getDoctorSchedules(doctorId);
+        return patientMedicalService.getDoctorSchedules(doctorId);
     }
 
     @Override
     public List<LocalTime> getAvailableSlots(Long patientId, Long scheduleId, Long doctorId) {
         Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException("Patient with id " + patientId + " not found"));
 
-        DoctorScheduleDTO scheduleDTO = doctorService.getDoctorSchedule(scheduleId);
+        DoctorScheduleDTO scheduleDTO = patientMedicalService.getSchedule(scheduleId);
         List<Appointment> appointments = getAppointmentsFromSchedule(scheduleDTO, doctorId);
         log.info("Patient {} : {} retrieved available slots", patient.getFirstName(), patient.getLastName());
 
-        return doctorService.getAvailableSlots(scheduleDTO.getWorkingDate(), doctorId, appointments);
+        return patientMedicalService.getAvailableSlots(scheduleDTO.getWorkingDate(), doctorId, appointments);
     }
 
     @Override
     public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO, Long patientId, Long doctorId) {
         PatientDTO patientDTO = getPatient(patientId);
-        DoctorDTO doctorDTO = doctorService.getDoctor(doctorId);
+        DoctorDTO doctorDTO = patientMedicalService.getDoctor(doctorId);
 
-        return appointmentService.createAppointment(appointmentDTO, patientDTO, doctorDTO);
+        return patientMedicalService.createAppointment(appointmentDTO, patientDTO, doctorDTO);
     }
 
     @Override
     public List<AppointmentDTO> getPatientAppointments(Long id) {
         patientRepository.findById(id).orElseThrow(() -> new PatientNotFoundException("Patient with id " + id + " not found"));
 
-        return appointmentService.getPatientAppointments(id);
+        return patientMedicalService.getPatientAppointments(id);
     }
 
     @Override
     public AppointmentDTO cancelAppointment(Long patientId, Long appointmentId) {
         patientRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException("Patient with id " + patientId + " not found"));
 
-        return appointmentService.cancelAppointment(appointmentId);
+        return patientMedicalService.cancelAppointment(appointmentId);
     }
 
     private Patient getUpdatedFields(Patient patient, PatientUpdateDTO patientUpdateDTO) {
@@ -141,9 +138,9 @@ public class PatientServiceImpl implements PatientService {
     }
 
     private List<Appointment> getAppointmentsFromSchedule(DoctorScheduleDTO scheduleDTO, Long doctorId) {
-        List<Appointment> scheduledAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, SCHEDULED);
-        List<Appointment> openedAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, ONGOING);
-        List<Appointment> closedAppointments = appointmentService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, COMPLETED);
+        List<Appointment> scheduledAppointments = patientMedicalService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, SCHEDULED);
+        List<Appointment> openedAppointments = patientMedicalService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, ONGOING);
+        List<Appointment> closedAppointments = patientMedicalService.getAppointments(scheduleDTO.getWorkingDate(), doctorId, COMPLETED);
 
         return Stream.of(scheduledAppointments, openedAppointments, closedAppointments)
                 .flatMap(Collection::stream)
