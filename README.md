@@ -66,5 +66,5 @@ openai.api.model=gpt-3.5-turbo
 # SendGrid properties
 app.sendgrid.key=YOUR_SENDGRID_KEY
 app.sendgrid.templateId=YOUR_TEMPLATE_ID
-email.from=YOUR_SENDGRID_EMAIL
+app.sendgrid.email.from=YOUR_SENDGRID_EMAIL
 ```
