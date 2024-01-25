@@ -6,7 +6,6 @@ import com.patientappointment.scheduler.repositories.PatientRepository;
 import com.patientappointment.scheduler.services.email.EmailService;
 import com.patientappointment.scheduler.services.patient.PatientServiceImpl;
 import com.patientappointment.scheduler.services.patient.PatientServiceValidation;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +20,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@Slf4j
 @ExtendWith(MockitoExtension.class)
 class PatientServiceImplTest {
 
