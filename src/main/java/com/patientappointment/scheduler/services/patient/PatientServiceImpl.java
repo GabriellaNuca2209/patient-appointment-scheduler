@@ -5,6 +5,7 @@ import com.patientappointment.scheduler.models.dtos.*;
 import com.patientappointment.scheduler.models.entities.Appointment;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.PatientRepository;
+import com.patientappointment.scheduler.services.email.EmailService;
 import com.patientappointment.scheduler.services.medical.patient.PatientMedicalService;
 import com.patientappointment.scheduler.utils.enums.DoctorLocation;
 import com.patientappointment.scheduler.utils.enums.DoctorSpecialization;
@@ -26,13 +27,15 @@ public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;
     private final PatientServiceValidation patientServiceValidation;
     private final PatientMedicalService patientMedicalService;
+    private final EmailService emailService;
     private final ModelMapper modelMapper;
 
     public PatientServiceImpl(PatientRepository patientRepository, PatientServiceValidation patientServiceValidation,
-                              PatientMedicalService patientMedicalService, ModelMapper modelMapper) {
+                              PatientMedicalService patientMedicalService, EmailService emailService, ModelMapper modelMapper) {
         this.patientRepository = patientRepository;
         this.patientServiceValidation = patientServiceValidation;
         this.patientMedicalService = patientMedicalService;
+        this.emailService = emailService;
         this.modelMapper = modelMapper;
     }
 
@@ -43,6 +46,7 @@ public class PatientServiceImpl implements PatientService {
 
         Patient savedPatient = patientRepository.save(modelMapper.map(patientDTO, Patient.class));
         log.info("Patient " + savedPatient.getFirstName() + " " + savedPatient.getLastName() + " was saved in database.");
+        emailService.sendRegistrationEmail(savedPatient.getEmail(), savedPatient.getFirstName(), savedPatient.getId());
 
         return modelMapper.map(savedPatient, PatientDTO.class);
     }
