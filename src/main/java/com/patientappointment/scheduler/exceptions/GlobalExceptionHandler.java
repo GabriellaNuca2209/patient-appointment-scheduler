@@ -10,6 +10,7 @@ import com.patientappointment.scheduler.exceptions.patient.DobFutureException;
 import com.patientappointment.scheduler.exceptions.patient.PatientAlreadyExistsException;
 import com.patientappointment.scheduler.exceptions.patient.PatientNotFoundException;
 import com.patientappointment.scheduler.exceptions.patient.UnderageException;
+import com.patientappointment.scheduler.exceptions.schedule.ScheduleDateBeforePresent;
 import com.patientappointment.scheduler.exceptions.schedule.ScheduleNotFoundException;
 import com.patientappointment.scheduler.exceptions.schedule.ScheduleOutOfBoundsException;
 import com.patientappointment.scheduler.exceptions.schedule.ScheduleShiftsUnorderedException;
@@ -116,6 +117,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ScheduleShiftsUnorderedException.class)
     public ResponseEntity<Object> handleScheduleShiftsUnorderedException(ScheduleShiftsUnorderedException e) {
+        return getResponse(e, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ScheduleDateBeforePresent.class)
+    public ResponseEntity<Object> handleScheduleDateBeforePresent(ScheduleDateBeforePresent e) {
         return getResponse(e, HttpStatus.BAD_REQUEST);
     }
 
