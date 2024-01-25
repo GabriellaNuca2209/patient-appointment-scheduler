@@ -3,6 +3,7 @@ package com.patientappointment.scheduler.unit_tests;
 import com.patientappointment.scheduler.models.dtos.PatientDTO;
 import com.patientappointment.scheduler.models.entities.Patient;
 import com.patientappointment.scheduler.repositories.PatientRepository;
+import com.patientappointment.scheduler.services.email.EmailService;
 import com.patientappointment.scheduler.services.patient.PatientServiceImpl;
 import com.patientappointment.scheduler.services.patient.PatientServiceValidation;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 @Slf4j
+@ExtendWith(MockitoExtension.class)
 class PatientServiceImplTest {
 
     @Mock
@@ -29,6 +30,9 @@ class PatientServiceImplTest {
 
     @Mock
     private PatientServiceValidation patientServiceValidation;
+
+    @Mock
+    private EmailService emailService;
 
     @Mock
     private ModelMapper modelMapper;
