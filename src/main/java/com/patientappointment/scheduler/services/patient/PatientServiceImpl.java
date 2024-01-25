@@ -19,8 +19,8 @@ import java.util.stream.Stream;
 
 import static com.patientappointment.scheduler.utils.enums.AppointmentStatus.*;
 
-@Service
 @Slf4j
+@Service
 public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;

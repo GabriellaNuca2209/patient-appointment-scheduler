@@ -19,12 +19,12 @@ public class PatientDTO {
     private Long id;
 
     @NotBlank
-    @Size(min = 3, max = 75, message = "must be between 2 and 75 characters")
+    @Size(min = 3, max = 75, message = "must be between 3 and 75 characters")
     @Pattern(regexp = REGEX_CHAR_PATTERN, message = "Invalid characters found")
     private String firstName;
 
     @NotBlank
-    @Size(min = 3, max = 75, message = "must be between 2 and 75 characters")
+    @Size(min = 3, max = 75, message = "must be between 3 and 75 characters")
     @Pattern(regexp = REGEX_CHAR_PATTERN, message = "Invalid characters found")
     private String lastName;
 

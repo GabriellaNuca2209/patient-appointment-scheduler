@@ -59,6 +59,7 @@ public class DoctorServiceImpl implements DoctorService {
     public DoctorScheduleDTO createSchedule(DoctorScheduleDTO doctorScheduleDTO, Long doctorId) {
         doctorServiceValidation.validateScheduleBetweenWorkingHours(doctorScheduleDTO.getStartShift(), doctorScheduleDTO.getEndShift());
         doctorServiceValidation.validateScheduleShiftsAreInOrder(doctorScheduleDTO.getStartShift(), doctorScheduleDTO.getEndShift());
+        doctorServiceValidation.validateDateIsNotBeforePresent(doctorScheduleDTO.getWorkingDate());
 
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + doctorId + " not found"));
         doctorScheduleDTO.setDoctor(doctor);
